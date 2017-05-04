@@ -58,7 +58,11 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
         setSepend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String inPutMoney = editText.getText().toString();
-                //test//Toast.makeText(UpdateSpend.this,inPutMoney,Toast.LENGTH_SHORT).show();
+
+                //스피너 값 받아오기
+               String selItem = (String)category.getSelectedItem();
+                //test//
+                Toast.makeText(UpdateSpend.this,selItem,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -84,6 +88,8 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
                 android.R.layout.simple_spinner_item);//어떤형식으로
 
         category.setAdapter(adapter);//스피너와 연결!!
+
+
 
         //카메라 (사진찍기)
         mButton_camera = (Button) findViewById(R.id.camera);
