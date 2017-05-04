@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -90,7 +91,7 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
         mPhotoImageView = (ImageView) findViewById(R.id.cameraView);
 
         mButton_album.setOnClickListener(this);
-
+        mButton_camera.setOnClickListener(this);
         //mButton.setOnClickListener(this);
 
     }
@@ -98,11 +99,14 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
 
         switch (v.getId()){
+
             case (R.id.camera):
                 dispatchTakePictureIntent();
+                Toast.makeText(UpdateSpend.this,"dd",Toast.LENGTH_SHORT).show();
                 break;
             case (R.id.album):
                 doTakeAlbumAction();
+
                 break;
         }
 
@@ -110,12 +114,16 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            Toast.makeText(UpdateSpend.this,"ee",Toast.LENGTH_SHORT).show();
             File photoFile = null;
             try {
+
                 photoFile = createImageFile(); // 사진찍은 후 저장할 임시 파일
             } catch (IOException ex) {
-                Toast.makeText(getApplicationContext(), "createImageFile Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "createImageFile Failed",
+                        Toast.LENGTH_LONG).show();
             }
             if (photoFile != null) {
                 photoURI = Uri.fromFile(photoFile); // 임시 파일의 위치,경로 가져옴
@@ -123,17 +131,15 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
+
     }
 
 
+    //저장할 폴더 생성
     private File createImageFile() throws IOException {
-/* Create an image file name, 폴더명 지정 방법 (문제 : DIRECTORY_DCIM , DIRECTORY_PICTURE 경로가 없는 폰 존재)
-String imageFileName = "tmp_" + String.valueOf(System.currentTimeMillis());
-File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "MYAPP/"); File file = File.createTempFile(imageFileName, ".jpg", storageDir);
-mCurrentPhotoPath = file.getAbsolutePath();
-return file;
-*/
-// 특정 경로와 폴더를 지정하지 않고, 메모리 최상 위치에 저장 방법
+
+
+        // 특정 경로와 폴더를 지정하지 않고, 메모리 최상 위치에 저장 방법
         String imageFileName = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
         File storageDir = new File(Environment.getExternalStorageDirectory(), imageFileName);
         mCurrentPhotoPath = storageDir.getAbsolutePath();
@@ -154,13 +160,11 @@ return file;
         cropIntent.setDataAndType(photoURI, "image/*");
         cropIntent.putExtra("outputX", 200); // crop한 이미지의 x축 크기
         cropIntent.putExtra("outputY", 200); // crop한 이미지의 y축 크기
-        // cropIntent.putExtra("aspectX", 1); // crop 박스의 x축 비율
-        // cropIntent.putExtra("aspectY", 1); // crop 박스의 y축 비율
-        // cropIntent.putExtra("scale", true);
 
         if (album == false) {
             cropIntent.putExtra("output", photoURI); // 크랍된 이미지를 해당 경로에 저장
-        } else if (album == true) {
+        }
+        else if (album == true) {
             cropIntent.putExtra("output", albumURI); // 크랍된 이미지를 해당 경로에 저장
         }
         startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
@@ -175,6 +179,7 @@ return file;
         } else {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO: // 앨범 이미지 가져오기 album = true;
+                    album = true;
                     File albumFile = null;
                     try {
                         albumFile = createImageFile();
@@ -185,20 +190,28 @@ return file;
                         albumURI = Uri.fromFile(albumFile); // 앨범 이미지 Crop한 결과는 새로운 위치 저장
                     }
                     photoURI = data.getData(); // 앨범 이미지의 경로
-/* iv_capture 에 띄우기
-Bitmap image_bitmap = null;
+
+                    //이미지 크롭//cropImage();
+
+                    //이미지띄우기
 
 
-}
-try {
-        image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI);
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    iv_capture.setImageBitmap(image_bitmap);
-    */
-// break; REQUEST_IMAGE_CAPTURE로 전달하여 Crop case REQUEST_IMAGE_CAPTURE:
+/*
+                    try {
+                        Bitmap image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),
+                        photoURI);
+
+                        mPhotoImageView.setImageBitmap(image_bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+*/
+
+
+                case REQUEST_IMAGE_CAPTURE:
                     cropImage();
+
                     break;
 
                 case REQUEST_IMAGE_CROP:
@@ -214,6 +227,8 @@ try {
                     this.sendBroadcast(mediaScanIntent); // 동기화
                     break;
             }
+
+            //mPhotoImageView.setImageDrawable();
         }
     }
 }
