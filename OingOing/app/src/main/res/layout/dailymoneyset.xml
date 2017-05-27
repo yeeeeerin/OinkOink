@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="8"
+    >
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       android:layout_weight="2"
+       android:layout_gravity="center"
+       >
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center_horizontal"
+           android:layout_marginTop="130dp"
+           android:layout_weight="2"
+           android:text="일일 지출액 설정"
+           android:paddingLeft="80dp"
+           android:textSize="30dip"/>
+
+   </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="15dp"
+        android:weightSum="10">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:text="시작날짜 "
+            android:paddingLeft="15dp"
+            android:id="@+id/startDate"
+            android:layout_weight="3" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:id="@+id/startdate"
+            android:layout_weight="7"
+            android:inputType="textCapWords" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="15dp"
+        android:weightSum="10">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:text="종료날짜 "
+            android:paddingLeft="15dp"
+            android:id="@+id/endDate"
+            android:layout_weight="3" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:id="@+id/enddate"
+            android:layout_weight="7"
+            android:inputType="textCapWords" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="15dp"
+        android:weightSum="10">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:text="설정금액 "
+            android:paddingLeft="15dp"
+            android:id="@+id/setmoney"
+            android:layout_weight="3" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:id="@+id/setMoney"
+            android:inputType="number"
+            />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="설정"
+        android:id="@+id/setButton"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+     />
+
+</LinearLayout>
