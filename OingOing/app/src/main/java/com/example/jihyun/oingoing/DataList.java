@@ -134,7 +134,7 @@ public class DataList extends AppCompatActivity {
         Log.e(LOG_TAG, "DataList.addDataToRealm");
         myRealm.beginTransaction();
         DataDetailsModel dataDetailsModel = myRealm.createObject(DataDetailsModel.class);
-        dataDetailsModel.setId(id+dataDetailsModelArrayList.size());
+        dataDetailsModel.setId(id+dataDetailsModelArrayList.size()); //id+남아있는리스트개수를 해줘야해
         dataDetailsModel.setName(model.getName());
         dataDetailsModel.setPrice(model.getPrice());
         dataDetailsModelArrayList.add(dataDetailsModel);

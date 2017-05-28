@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-   //수정
+    //수정
     @Override
     public void onClick(View v) {
 //        switch (v.getId()) {
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                //getApplicationContext().startActivity(intent);
 //                break;
 //
- //       }
+        //       }
     }
 
     //다이얼로그를 열어 데이터를 추가 + 삭제 하는 함수
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 //입력칸이 비어있는지 확인하고 다 채워졌다면 데이터를 추가 or업데이트, 빈 칸이 있다면 채우라는 다이얼로그띄움
-               if (!Utility.isBlankField(etAddCategory) && !Utility.isBlankField(etAddIncome)) {
+                if (!Utility.isBlankField(etAddCategory) && !Utility.isBlankField(etAddIncome)) {
                     DataDetailsModel dataDetailsModel = new DataDetailsModel();
                     dataDetailsModel.setName(etAddCategory.getText().toString());
                     dataDetailsModel.setPrice(Integer.parseInt(etAddIncome.getText().toString()));
@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dataDetailsAdapter.notifyDataSetChanged();
         id++;
     }
-    //데이터 업데이트 함
+    //데이터 업데이트 함(수정)
     public void updatePersonDetails(DataDetailsModel model,int position,int personID) {
         Log.e(LOG_TAG, "MainActivity.updatePersonDetails");
         DataDetailsModel editPersonDetails = myRealm.where(DataDetailsModel.class).equalTo("id", personID).findFirst();

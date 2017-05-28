@@ -2,12 +2,12 @@
 <resources>
     <!-- 배열이름은 USSpinner -->
     <string-array name="USSpinner">
-        <item>이것</item>
-        <item>저것</item>
-        <item>항목</item>
-        <item>넣어</item>
-        <item>주세</item>
-        <item>요.</item>
+        <item>교통비</item>
+        <item>식비</item>
+        <item>문화생활</item>
+        <item>쇼핑</item>
+        <item>기타</item>
+        <item>선택</item>
     </string-array>
 
 </resources>
