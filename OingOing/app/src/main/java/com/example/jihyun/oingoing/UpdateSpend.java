@@ -360,4 +360,11 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
             //mPhotoImageView.setImageDrawable();
         }
     }
+
+    protected void onDestroy() {
+        Log.e("ee", "DataList.onDestroy");
+        super.onDestroy();
+        dataDetailsModelArrayList.clear();
+        myRealm.close();
+    }
 }
