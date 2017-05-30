@@ -290,15 +290,15 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
             Toast.makeText(getApplicationContext(), "onActivityResult : RESULT_NOT_OK", Toast.LENGTH_LONG).show();
         } else {
             switch (requestCode) {
-                case REQUEST_TAKE_PHOTO: // 앨범 이미지 가져오기 album = true;
-                    album = true;
+                case REQUEST_TAKE_PHOTO: // 앨범 이미지 가져오기 album = true; //앨범으로 불러오면 여기로 넘어온다
+                    album = true; //나 앨범으로 불러온거 맞아 라는 flag
                     File albumFile = null;
                     try {
                         albumFile = createImageFile();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (albumFile != null) {
+                    if (albumFile != null) { //파일이 잘 만들어 졌니?
                         albumURI = Uri.fromFile(albumFile); // 앨범 이미지 Crop한 결과는 새로운 위치 저장
                     }
                     photoURI = data.getData(); // 앨범 이미지의 경로
@@ -315,9 +315,9 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
 
                     if (extras != null) {
                         Bitmap photo;
-                        if(album)
+                        if(album)//앨범으로 가져왔을 때
                             photo = BitmapFactory.decodeFile(albumURI.getPath());
-                        else
+                        else//카메라로 가져왔을 때
                             photo = BitmapFactory.decodeFile(photoURI.getPath());
 
                         mPhotoImageView.setImageBitmap(photo);

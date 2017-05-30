@@ -13,6 +13,7 @@ public class DataDetailsModel extends RealmObject {
     private int id;
     private String name;
     private int price;
+    
 
     public int getId() {return id;}
     public void setId(int id) {
