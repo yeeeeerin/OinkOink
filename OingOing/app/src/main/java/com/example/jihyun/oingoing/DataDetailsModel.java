@@ -14,6 +14,7 @@ public class DataDetailsModel extends RealmObject {
     private String name;
     private int price;
 
+
     public int getId() {return id;}
     public void setId(int id) {
         this.id = id;
@@ -30,4 +31,5 @@ public class DataDetailsModel extends RealmObject {
     public void setPrice(int price) {
         this.price = price;
     }
+
 }

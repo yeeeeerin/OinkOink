@@ -155,30 +155,7 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
         category.setAdapter(adapter);//스피너와 연결!!
 
 
-//        items = new ArrayList<String>();
-//                items.add("교통비");
-//                items.add("식비");
-//                items.add("문화생활");
-//                items.add("선택");
-//
-//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, items) {
-//                        public View getView(int position, View convertView, ViewGroup parent) {
-//                                View v = super.getView(position, convertView, parent);
-//                                if (position == getCount()) {
-//                                        ((TextView) v.findViewById(android.R.id.text1)).setText("");
-//                                        ((TextView) v.findViewById(android.R.id.text1)).setHint(getItem(getCount()));
-//                                    }
-//                                return v;
-//                            }
-//
-//                                public int getCount() {
-//                                return super.getCount() - 1;
-//                            }
-//                    };
-//
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                category.setAdapter(adapter);
-//                category.setSelection(adapter.getCount());
+
 
         //카메라 (사진찍기)
         mButton_camera = (Button) findViewById(R.id.camera);
@@ -331,32 +308,18 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
 
                     break;
 
-//                    Bitmap photo = BitmapFactory.decodeFile(albumURI.getPath());
-//                    //mPhotoImageView.setImageBitmap(photo); //이미지 띄우
-//                    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE); // 동기화
-//                    if (album == false) {
-//                        mediaScanIntent.setData(photoURI); // 동기화
-//                    } else if (album == true) {
-//                        album = false;
-//                        mediaScanIntent.setData(albumURI); // 동기화
-//                    }
-//                    this.sendBroadcast(mediaScanIntent); // 동기화
 //
-//
-//                    try {
-//                        Bitmap image_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),
-//                                albumURI);
-//                        Toast.makeText(UpdateSpend.this,"dd",Toast.LENGTH_SHORT).show();//test
-//                        mPhotoImageView.findViewById(R.id.cameraView);
-//                        mPhotoImageView.setImageBitmap(image_bitmap);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    break;
             }
 
-            //mPhotoImageView.setImageDrawable();
+
         }
+    }
+
+    // 앱이 종료되었을  onCreate와 반대로 액티비티가 종료 될 때 onDestroy가 나타난다
+    protected void onDestroy() {
+        Log.e("ee", "MainActivity.onDestroy");
+        super.onDestroy();
+        dataDetailsModelArrayList.clear();
+        myRealm.close();
     }
 }
