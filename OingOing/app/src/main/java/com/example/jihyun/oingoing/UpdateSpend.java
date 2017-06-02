@@ -56,7 +56,6 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
     Boolean album = false;
     String mCurrentPhotoPath;
 
-
     //데이터베이스부분
     private static int id=1;
     private Realm myRealm;
@@ -290,15 +289,15 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
             Toast.makeText(getApplicationContext(), "onActivityResult : RESULT_NOT_OK", Toast.LENGTH_LONG).show();
         } else {
             switch (requestCode) {
-                case REQUEST_TAKE_PHOTO: // 앨범 이미지 가져오기 album = true; //앨범으로 불러오면 여기로 넘어온다
-                    album = true; //나 앨범으로 불러온거 맞아 라는 flag
+                case REQUEST_TAKE_PHOTO: // 앨범 이미지 가져오기 album = true;
+                    album = true;
                     File albumFile = null;
                     try {
                         albumFile = createImageFile();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (albumFile != null) { //파일이 잘 만들어 졌니?
+                    if (albumFile != null) {
                         albumURI = Uri.fromFile(albumFile); // 앨범 이미지 Crop한 결과는 새로운 위치 저장
                     }
                     photoURI = data.getData(); // 앨범 이미지의 경로
@@ -315,9 +314,9 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
 
                     if (extras != null) {
                         Bitmap photo;
-                        if(album)//앨범으로 가져왔을 때
+                        if(album)
                             photo = BitmapFactory.decodeFile(albumURI.getPath());
-                        else//카메라로 가져왔을 때
+                        else
                             photo = BitmapFactory.decodeFile(photoURI.getPath());
 
                         mPhotoImageView.setImageBitmap(photo);
@@ -327,7 +326,7 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
                     // 임시 파일 삭제
                     File f = new File(photoURI.getPath());
                     if (f.exists()) {
-                       f.delete();
+                        f.delete();
                     }
 
                     break;
@@ -359,12 +358,5 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
 
             //mPhotoImageView.setImageDrawable();
         }
-    }
-
-    protected void onDestroy() {
-        Log.e("ee", "DataList.onDestroy");
-        super.onDestroy();
-        dataDetailsModelArrayList.clear();
-        myRealm.close();
     }
 }

@@ -67,69 +67,42 @@
             android:orientation="vertical"
             android:weightSum="10">
 
-            //텝호스트
-
-            <TabHost
-                android:id="@+id/tabHost"
+            <LinearLayout
+                android:id="@+id/calenderView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_alignParentBottom="true"
-                android:layout_weight="10"
+                android:layout_weight="6"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    <!--<CalendarView-->
+                        <!--android:layout_marginBottom="5dp"-->
+                        <!--android:id="@+id/tabMonth"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center"-->
+                         <!--/>-->
 
-                    <FrameLayout
-                        android:id="@android:id/tabcontent"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
+            </LinearLayout>
 
-                        <DatePicker
-                            android:id="@+id/tabMonth"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:calendarViewShown="true"
-                            android:paddingTop="10dp" />
+            <ListView
+                android:id="@+id/lvPersonNameList"
+                android:layout="@layout/content_main"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/colorPrimaryDark"
+                android:layout_weight="3"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                        <include layout="@layout/content_main" />
-
-                            <ImageView
-                                android:id="@+id/tabWeek"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <ImageView
-                                android:id="@+id/tabDay"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:background="@color/colorPrimaryDark" />
-                        </LinearLayout>
-                    </FrameLayout>
-
-                    <TabWidget
-                        android:id="@android:id/tabs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"></TabWidget>
-                </LinearLayout>
-
-            </TabHost>
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:max="100"
+                android:progress="40"/>
 
         </LinearLayout>
 
@@ -140,7 +113,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
-//추가
+        //추가
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

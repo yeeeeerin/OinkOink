@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 배열이름은 USSpinner -->
+    <string-array name="UISpinner">
+        <item>용돈</item>
+        <item>알바비</item>
+        <item>월급</item>
+        <item>수익</item>
+    </string-array>
+
+</resources>

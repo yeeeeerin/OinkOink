@@ -17,11 +17,14 @@ import android.view.Menu;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -30,14 +33,15 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static android.R.id.progress;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    TabHost tabHost;
+    ArrayAdapter adapter;
+    ProgressBar ProgressBar;
     final static String LOG_TAG = "myLogs";
     private static int id = 1;
-    //private FloatingActionButton fabAddPerson;
     FloatingActionButton fab1, fab2, fab3, fab4;
-
     private Realm myRealm;
     private ListView lvPersonNameList;
     private static ArrayList<DataDetailsModel> dataDetailsModelArrayList = new ArrayList<>();
@@ -55,15 +59,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getAllWidgets();
         getAllUsers();//0528
         bindWidgetsWithEvents();
-
-        tabHost=(TabHost)findViewById(R.id.tabHost);
-
-        tabHost.setup();
-        tabHost.addTab(tabHost.newTabSpec("").setContent(R.id.tabMonth).setIndicator("월별"));
-        tabHost.addTab(tabHost.newTabSpec("").setContent(R.id.tabWeek).setIndicator("주별"));
-        tabHost.addTab(tabHost.newTabSpec("").setContent(R.id.tabDay).setIndicator("일별"));
-
-        tabHost.setCurrentTab(0);
 
         ImageView addbtn=(ImageView) findViewById(R.id.addBtn);
         addbtn.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +105,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(getApplicationContext(), UpdateSpend.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(intent);
+            }
+        });
+
+        ProgressBar progressBar=(ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setIndeterminate(false);
+        progressBar.setMax(100);
+        //progressBar.setProgress(80);
+        progressBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "___만큼 달성하였습니다", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -183,21 +189,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
 //maindialog
         LayoutInflater li = LayoutInflater.from(MainActivity.this);//뷰를 띄워주는 역할
-        View promptsView = li.inflate(R.layout.income_dialog, null);//정보를 입력하는 창 연결, 뷰 생성
+        View promptsView = li.inflate(R.layout.mainincome_dialog, null);//정보를 입력하는 창 연결, 뷰 생성
         AlertDialog.Builder mainDialog = new AlertDialog.Builder(MainActivity.this);//다이얼 로그 생성하기 위한 빌더 얻기
         mainDialog.setView(promptsView);//알림창 지정된 레이아웃을 띄운다
-
+        mainDialog.setTitle("수입 입력");
 
         //이 변수들은 income_dialog.xml에서 가져온 아이들, 즉 한 엑티비티에 뷰를 두개 가져온 것이다
         //위에서 View promptsViewView이 문장을 통해 뷰를 생성했기 때문에 사용이 가능하다
-        final EditText etAddCategory = (EditText) promptsView.findViewById(R.id.setCategory);
+        final Spinner etAddCategory = (Spinner) promptsView.findViewById(R.id.setCategory);
         final EditText etAddIncome = (EditText) promptsView.findViewById(R.id.setIncome);
+
+        adapter = ArrayAdapter.createFromResource(this,
+                R.array.UISpinner,//배열 가져온다
+                android.R.layout.simple_spinner_item);//어떤형식으로
+        etAddCategory.setAdapter(adapter);
+
+
 
         //모델이 없다면, 즉 새로운 데이터를 입력한다면
         //버튼을 눌렀을 때 이 함수에 null,-l을 매개변수로 주는것을 볼 수 있다. null을 준 의미가 새로운 데이터를 생성하기 위함임
         //뷰를 띄우고 기다림
         if (model != null) {
-            etAddCategory.setText(model.getName());
+            etAddCategory.setAdapter(adapter);//스피너와 연결!!
             etAddIncome.setText(String.valueOf(model.getPrice()));
         }
         mainDialog.setCancelable(false)//back키 설정 안함
@@ -216,9 +229,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 //입력칸이 비어있는지 확인하고 다 채워졌다면 데이터를 추가 or업데이트, 빈 칸이 있다면 채우라는 다이얼로그띄움
-                if (!Utility.isBlankField(etAddCategory) && !Utility.isBlankField(etAddIncome)) {
+                // if (!Utility.isBlankField(etAddCategory) && !Utility.isBlankField(etAddIncome)) {
+                if (!Utility.isBlankField(etAddIncome)) {
+                    String selItem = (String)etAddCategory.getSelectedItem();
                     DataDetailsModel dataDetailsModel = new DataDetailsModel();
-                    dataDetailsModel.setName(etAddCategory.getText().toString());
+                    dataDetailsModel.setName(selItem);
                     dataDetailsModel.setPrice(Integer.parseInt(etAddIncome.getText().toString()));
                     if (model == null)//데이터베이스를 새로 생성하겠다!!
                         addDataToRealm(dataDetailsModel);
@@ -256,6 +271,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dataDetailsAdapter.notifyDataSetChanged();
     }
 
+
+
     //0528
     //데이터 리스트 가져오는 함수
     private void getAllUsers() {
@@ -279,4 +296,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dataDetailsModelArrayList.clear();
         myRealm.close();
     }
+
 }

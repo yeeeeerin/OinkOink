@@ -9,9 +9,11 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    //tools:context="com.example.jihyun.oingoing.DataList">
-    //tools:showIn="@layout/activity_main">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_main"
+
+    tools:context="com.example.jihyun.oingoing.DataList">
+    >
     <ListView
         android:id="@+id/lvPersonNameList"
         android:layout_width="match_parent"
