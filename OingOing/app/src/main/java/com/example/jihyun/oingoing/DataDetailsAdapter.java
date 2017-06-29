@@ -75,7 +75,7 @@ public class DataDetailsAdapter extends BaseAdapter {
             Log.d("ee",dataDetailsArrayList.get(position).getName());
             holder.tvPersonName.setTextColor(Color.rgb(55, 255, 55));
         }
-        if(position == 0 && dataDetailsArrayList.get(position).isInOrOut() == false)
+        if(dataDetailsArrayList.get(position).isInOrOut() == false)
             holder.tvPersonName.setTextColor(Color.rgb(0, 0, 0));
 
 
