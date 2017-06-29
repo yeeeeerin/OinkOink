@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -103,11 +104,15 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
 
 
                     //데이터베이스에 추가하기
+                    Date d = new Date();
+
                     myRealm.beginTransaction();
                     DataDetailsModel dataDetailsModel = myRealm.createObject(DataDetailsModel.class);
                     dataDetailsModel.setId(id+dataDetailsModelArrayList.size());
                     dataDetailsModel.setName(selItem);
                     dataDetailsModel.setPrice(money);
+                    dataDetailsModel.setDate(d);
+                    dataDetailsModel.setInOrOut(true); //지출
                     dataDetailsModelArrayList.add(dataDetailsModel);
                     myRealm.commitTransaction();
                     dataDetailsAdapter.notifyDataSetChanged();

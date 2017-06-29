@@ -29,6 +29,7 @@ import android.widget.TabHost;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -235,6 +236,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     DataDetailsModel dataDetailsModel = new DataDetailsModel();
                     dataDetailsModel.setName(selItem);
                     dataDetailsModel.setPrice(Integer.parseInt(etAddIncome.getText().toString()));
+                    dataDetailsModel.setDate(new Date()); //date추가
+
+                    Log.d("ee",dataDetailsModel.getDate().toString());
                     if (model == null)//데이터베이스를 새로 생성하겠다!!
                         addDataToRealm(dataDetailsModel);
                     else//기존에 있던 데이터를 업데이트하겠다!!
@@ -248,12 +252,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     //데이터 삽입함수
     private void addDataToRealm(DataDetailsModel model) {
-        Log.e(LOG_TAG, "MainActivity.addDataToRealm");
-        myRealm.beginTransaction();//Transaction을 이용한 삽입, 성능이 좋아
+        Log.e(LOG_TAG, "DataList.addDataToRealm");
+
+
+        myRealm.beginTransaction();
+
         DataDetailsModel dataDetailsModel = myRealm.createObject(DataDetailsModel.class);
-        dataDetailsModel.setId(id+dataDetailsModelArrayList.size());//0528
+        dataDetailsModel.setId(id+dataDetailsModelArrayList.size()); //id+남아있는리스트개수를 해줘야해
         dataDetailsModel.setName(model.getName());
         dataDetailsModel.setPrice(model.getPrice());
+        dataDetailsModel.setDate(model.getDate());
+        dataDetailsModel.setInOrOut(false); //수입
         dataDetailsModelArrayList.add(dataDetailsModel);
         myRealm.commitTransaction();
         dataDetailsAdapter.notifyDataSetChanged();

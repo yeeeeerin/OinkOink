@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import java.util.Date;
+import android.graphics.Color;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +68,7 @@ public class DataList extends AppCompatActivity {
     public void deleteData(int personId, int position) {
         Log.e(LOG_TAG, "DataList.deletePerson");
         RealmResults<DataDetailsModel> results = myRealm.where(DataDetailsModel.class).equalTo("id", personId).findAll();
+
         myRealm.beginTransaction();
         results.remove(0);
         myRealm.commitTransaction();
@@ -119,8 +123,10 @@ public class DataList extends AppCompatActivity {
                     DataDetailsModel dataDetailsModel = new DataDetailsModel();
                     dataDetailsModel.setName(etAddPersonName.getText().toString());
                     dataDetailsModel.setPrice(Integer.parseInt(etAddPersonAge.getText().toString()));
+                    dataDetailsModel.setDate(new Date());
                     if (model == null)
-                        addDataToRealm(dataDetailsModel);
+                        Log.d("ee","nono");
+                       // addDataToRealm(dataDetailsModel);
                     else
                         updatePersonDetails(dataDetailsModel, position, model.getId());
                     dialog.cancel();
@@ -132,11 +138,15 @@ public class DataList extends AppCompatActivity {
     }
     private void addDataToRealm(DataDetailsModel model) {
         Log.e(LOG_TAG, "DataList.addDataToRealm");
+
+
         myRealm.beginTransaction();
+
         DataDetailsModel dataDetailsModel = myRealm.createObject(DataDetailsModel.class);
         dataDetailsModel.setId(id+dataDetailsModelArrayList.size()); //id+남아있는리스트개수를 해줘야해
         dataDetailsModel.setName(model.getName());
         dataDetailsModel.setPrice(model.getPrice());
+        dataDetailsModel.setDate(model.getDate());
         dataDetailsModelArrayList.add(dataDetailsModel);
         myRealm.commitTransaction();
         dataDetailsAdapter.notifyDataSetChanged();

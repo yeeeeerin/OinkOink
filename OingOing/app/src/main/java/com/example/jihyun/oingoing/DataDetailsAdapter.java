@@ -2,6 +2,7 @@ package com.example.jihyun.oingoing;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,11 +61,24 @@ public class DataDetailsAdapter extends BaseAdapter {
             holder.tvPersonPrice=(TextView) v.findViewById(R.id.tvPersonPrice);
             holder.ivEditPesonDetail=(ImageView)v.findViewById(R.id.ivEditPesonDetail);
             holder.ivDeletePerson=(ImageView)v.findViewById(R.id.ivDeletePerson);
+
             v.setTag(holder);
         } else {
             holder = (Holder) v.getTag();
         }
         holder.tvPersonName.setText(dataDetailsArrayList.get(position).getName());
+
+        //색 바꾸는 부분
+        boolean a = dataDetailsArrayList.get(position).isInOrOut();
+
+        if (a) {
+            Log.d("ee",dataDetailsArrayList.get(position).getName());
+            holder.tvPersonName.setTextColor(Color.rgb(55, 255, 55));
+        }
+        if(position == 0 && dataDetailsArrayList.get(position).isInOrOut() == false)
+            holder.tvPersonName.setTextColor(Color.rgb(0, 0, 0));
+
+
         holder.tvPersonPrice.setText(""+dataDetailsArrayList.get(position).getPrice());
         holder.ivEditPesonDetail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +95,8 @@ public class DataDetailsAdapter extends BaseAdapter {
                 ShowConfirmDialog(context,dataDetailsArrayList.get(position).getId(), position);
             }
         });
+
+
         return v;
     }
     class Holder {
