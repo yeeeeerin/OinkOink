@@ -126,7 +126,7 @@ public class DataList extends AppCompatActivity {
                     dataDetailsModel.setDate(new Date());
                     if (model == null)
                         Log.d("ee","nono");
-                       // addDataToRealm(dataDetailsModel);
+                        // addDataToRealm(dataDetailsModel);
                     else
                         updatePersonDetails(dataDetailsModel, position, model.getId());
                     dialog.cancel();

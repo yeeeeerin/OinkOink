@@ -79,6 +79,7 @@ public class DataDetailsAdapter extends BaseAdapter {
             holder.tvPersonName.setTextColor(Color.rgb(0, 0, 0));
 
 
+
         holder.tvPersonPrice.setText(""+dataDetailsArrayList.get(position).getPrice());
         holder.ivEditPesonDetail.setOnClickListener(new View.OnClickListener() {
             @Override

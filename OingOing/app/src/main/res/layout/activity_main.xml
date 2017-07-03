@@ -68,36 +68,78 @@
             android:weightSum="10">
 
             <LinearLayout
-                android:id="@+id/calenderView"
+                android:id="@+id/calender"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="6"
+                android:layout_weight="8"
                 android:layout_marginTop="5dp"
+                android:weightSum="8"
                 android:orientation="vertical">
 
-                    <!--<CalendarView-->
-                        <!--android:layout_marginBottom="5dp"-->
-                        <!--android:id="@+id/tabMonth"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="center"-->
-                         <!--/>-->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="65dp"
+                    android:layout_weight="1"
+                    android:background="#FAFAFA">
+
+                    <Button
+                        android:id="@+id/monthPrevious"
+                        android:layout_width="46dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="30dp"
+                        android:background="@drawable/backward" />
+
+                    <TextView
+                        android:id="@+id/monthText"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center_horizontal"
+                        android:text="MonthVeiw"
+                        android:textSize="24dp"
+                        android:textColor="#000000" />
+
+                    <Button
+                        android:id="@+id/monthNext"
+                        android:layout_width="46dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/forward" />
+
+                </LinearLayout>
+
+                <GridView
+                    android:id="@+id/calendarView"
+                    android:layout_marginTop="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:background="#ffffff00"
+                    android:horizontalSpacing="1dp"
+                    android:numColumns="7"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="1dp"
+                    >
+
+
+                </GridView>
+
+
 
             </LinearLayout>
 
-            <ListView
-                android:id="@+id/lvPersonNameList"
-                android:layout="@layout/content_main"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@color/colorPrimaryDark"
-                android:layout_weight="3"/>
+
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 style="?android:attr/progressBarStyleHorizontal"

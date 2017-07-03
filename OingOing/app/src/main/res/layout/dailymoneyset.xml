@@ -35,6 +35,31 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="45dp"
+            android:text="목표설정 "
+            android:paddingLeft="15dp"
+            android:id="@+id/aim"
+            android:layout_weight="3" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:id="@+id/setAim"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="15dp"
+        android:weightSum="10">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="45dp"
             android:text="시작날짜 "
             android:paddingLeft="15dp"
             android:id="@+id/startDate"
