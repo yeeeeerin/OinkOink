@@ -42,16 +42,23 @@ import static android.R.id.progress;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    ArrayAdapter adapter;
-    ProgressBar ProgressBar;
     final static String LOG_TAG = "myLogs";
-    private static int id = 1;
     FloatingActionButton fab1, fab2, fab3, fab4;
+    ProgressBar ProgressBar;
+    ArrayAdapter adapter;
+    //------------db-------------
+
+    private static int id = 1;
     private Realm myRealm;
     private ListView lvPersonNameList;
     private static ArrayList<DataDetailsModel> dataDetailsModelArrayList = new ArrayList<>();
     private DataDetailsAdapter dataDetailsAdapter;
+    private static MainActivity instance;
     private AlertDialog.Builder subDialog;
+
+    int setdate;
+    //----------------------------
+
 
     private TextView monthText;
     private GridView monthView;
@@ -65,11 +72,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(LOG_TAG, "MainActivity.OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myRealm = Realm.getInstance(MainActivity.this);
+
+
+        /////db///////////
         lvPersonNameList = (ListView) findViewById(R.id.lvPersonNameList);
-        dataDetailsAdapter = new DataDetailsAdapter(MainActivity.this, dataDetailsModelArrayList);
-        getAllWidgets();
+        myRealm = Realm.getInstance(MainActivity.this);
+        instance = this;
+        setPersonDetailsAdapter();
+
         getAllUsers();//0528
+
+
+
+        ///////////////
+        getAllWidgets();
+
         bindWidgetsWithEvents();
 
         ImageView addbtn=(ImageView) findViewById(R.id.addBtn);
@@ -126,25 +143,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
                 //dataListDialog( , ); //날짜에 해당하는 리스트뷰 받아오기
 
-                LayoutInflater li = LayoutInflater.from(MainActivity.this);//뷰를 띄워주는 역할
-                View promptsView = li.inflate(R.layout.inflate_list_item, null);//뷰 생성 : 여기서 데이터베이스 리스트 받아오면 될꺼같은데 안됨ㅠ
-
-                AlertDialog.Builder dataDialog = new AlertDialog.Builder(MainActivity.this);//다이얼 로그 생성하기 위한 빌더 얻기
-                //myRealm = Realm.getInstance(DataList.getInstance());
-
-                final DataDetailsModel[] items = dataDetailsModelArrayList.toArray(new DataDetailsModel[dataDetailsModelArrayList.size()]);
-
-                //dataDialog.setView(promptsView);
-                //dataDialog.setTitle(dataDetailsModelArrayList.get(date).getDate().toString()+""); //데이터베이스 아이디로 날짜 받아오기
-                    dataDialog.setTitle(dataDetailsModelArrayList.get(1).getDate()+"");
-                //if(date==dataDetailsModelArrayList.get(date).getDate()) {
-                    //dataDialog.setMessage(dataDetailsModelArrayList.get(1).getName().toString() + " " + dataDetailsModelArrayList.get(1).getPrice()); //데이터베이스 아이디로 날짜 받아오기
-                dataDialog.setMessage(dataDetailsModelArrayList+" "); //
-
-                //}
-
-                final AlertDialog dialog = dataDialog.create();//다이얼 로그 객체 얻어오기
-                dialog.show();// 다이얼로그 보여주기
             }
         });
 
@@ -223,87 +221,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    ///--------------------db관련 함수들-----------------------
+    ///-----------------------------------------------------
 
+    private void setPersonDetailsAdapter() {
+        Log.e(LOG_TAG, "DataList.setPersonDetailsAdapter");
+        dataDetailsAdapter = new DataDetailsAdapter(MainActivity.this, dataDetailsModelArrayList);
+        lvPersonNameList.setAdapter(dataDetailsAdapter);//데이터 리스트 보여주는 함수
+    }
 
-
-
-    private void ToggleFab() {
-        // 버튼들이 보여지고있는 상태인 경우 숨겨줍니다.
-        if(fab1.getVisibility() == View.VISIBLE) {
-            fab1.hide();
-            fab2.hide();
-            fab4.hide();
-            fab1.animate().translationY(0);
-            fab2.animate().translationY(0);
-            fab4.animate().translationY(0);
+    //0528
+    //데이터 리스트 가져오는 함수
+    private void getAllUsers() {
+        Log.e(LOG_TAG, "DataList.getAllUsers");
+        RealmResults<DataDetailsModel> results = myRealm.where(DataDetailsModel.class).findAll();
+        myRealm.beginTransaction();
+        for (int i = 0; i < results.size(); i++) {
+            dataDetailsModelArrayList.add(results.get(i));
         }
-        // 버튼들이 숨겨져있는 상태인 경우 위로 올라오면서 보여줍니다.
-        else {
-            // 중심이 되는 버튼의 높이 + 마진 만큼 거리를 계산합니다.
-            int dy = fab3.getHeight() + 20;
-            fab1.show();
-            fab2.show();
-            fab4.show();
-            // 계산된 거리만큼 이동하는 애니메이션을 입력합니다.
-            fab4.animate().translationY(-dy*3);
-            fab1.animate().translationY(-dy*2);
-            fab2.animate().translationY(-dy);
-        }
-    }
-    //동그라미버튼
-    private void getAllWidgets() {
-        Log.e(LOG_TAG, "MainActivity.getAllWidgets");
-        //fabAddPerson = (FloatingActionButton) findViewById(R.id.fab);
-        fab2 = (FloatingActionButton)findViewById(R.id.fab_2);
-        lvPersonNameList = (ListView) findViewById(R.id.lvPersonNameList);
-    }
-    private void bindWidgetsWithEvents() {
-        Log.e(LOG_TAG, "MainActivity.bindWidgetsWithEvents");
-        //fabAddPerson.setOnClickListener(this);
-        fab2.setOnClickListener(this);
-
+        if(results.size()>0)
+            id = myRealm.where(DataDetailsModel.class).max("id").intValue() + 1;
+        myRealm.commitTransaction();
+        dataDetailsAdapter.notifyDataSetChanged();
     }
 
-    //수정
-    @Override
-    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.fab_2:
-//                addOrUpdatePersonDetailsDialog(null,-1);
-//                break;
-//            case R.id.fab_1:
-//                Toast.makeText(MainActivity.this, "영수증인식", Toast.LENGTH_SHORT).show();
-//                //Intent intent = new Intent(getApplicationContext(), UpdateSpend.class);
-//                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                //getApplicationContext().startActivity(intent);
-//                break;
-//
-        //       }
-    }
 
-    //0629 데이터 불러오는 다이얼로그
-    public void dataListDialog(final DataDetailsModel model, final int date){
-
-        LayoutInflater li = LayoutInflater.from(MainActivity.this);//뷰를 띄워주는 역할
-        View promptsView = li.inflate(R.layout.inflate_list_item, null);//뷰 생성 : 여기서 데이터베이스 리스트 받아오면 될꺼같은데 안됨ㅠ
-
-        AlertDialog.Builder dataDialog = new AlertDialog.Builder(MainActivity.this);//다이얼 로그 생성하기 위한 빌더 얻기
-        //myRealm = Realm.getInstance(DataList.getInstance());
-
-        //final DataDetailsModel[] items = dataDetailsModelArrayList.toArray(new DataDetailsModel[dataDetailsModelArrayList.size()]);
-        //ArrayAdapter<DataDetailsModel> ad=new ArrayAdapter<DataDetailsModel>(this,android.R.layout.simple_list_item_1, items);
-
-        //dataDialog.setView(dataDetailsModelArrayList.get(date).getDate());
-
-        dataDialog.setTitle(dataDetailsModelArrayList.get(date).getDate().toString()+""); //데이터베이스 아이디로 날짜 받아오기
-
-        dataDialog.setMessage(dataDetailsModelArrayList.get(date).getName().toString() + " " + dataDetailsModelArrayList.get(date).getPrice()); //데이터베이스 아이디로 날짜 받아오기
-
-        //lvPersonNameList.setAdapter(ad);
-        final AlertDialog dialog = dataDialog.create();//다이얼 로그 객체 얻어오기
-        dialog.show();// 다이얼로그 보여주기
-
-    }
 
     //다이얼로그를 열어 데이터를 추가 + 삭제 하는 함수
     public void addOrUpdatePersonDetailsDialog(final DataDetailsModel model,final int position) {
@@ -412,21 +354,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-    //0528
-    //데이터 리스트 가져오는 함수
-    private void getAllUsers() {
-        Log.e(LOG_TAG, "DataList.getAllUsers");
-        RealmResults<DataDetailsModel> results = myRealm.where(DataDetailsModel.class).findAll();
-        myRealm.beginTransaction();
-        for (int i = 0; i < results.size(); i++) {
-            dataDetailsModelArrayList.add(results.get(i));
-        }
-        if(results.size()>0)
-            id = myRealm.where(DataDetailsModel.class).max("id").intValue() + 1;
-        myRealm.commitTransaction();
-        dataDetailsAdapter.notifyDataSetChanged();
-    }
-
     // db삭제
     // 앱이 종료되었을  onCreate와 반대로 액티비티가 종료 될 때 onDestroy가 나타난다
     protected void onDestroy() {
@@ -435,5 +362,91 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dataDetailsModelArrayList.clear();
         myRealm.close();
     }
+
+    ///--------------------db함수 끝-------------------
+
+
+
+
+    private void ToggleFab() {
+        // 버튼들이 보여지고있는 상태인 경우 숨겨줍니다.
+        if(fab1.getVisibility() == View.VISIBLE) {
+            fab1.hide();
+            fab2.hide();
+            fab4.hide();
+            fab1.animate().translationY(0);
+            fab2.animate().translationY(0);
+            fab4.animate().translationY(0);
+        }
+        // 버튼들이 숨겨져있는 상태인 경우 위로 올라오면서 보여줍니다.
+        else {
+            // 중심이 되는 버튼의 높이 + 마진 만큼 거리를 계산합니다.
+            int dy = fab3.getHeight() + 20;
+            fab1.show();
+            fab2.show();
+            fab4.show();
+            // 계산된 거리만큼 이동하는 애니메이션을 입력합니다.
+            fab4.animate().translationY(-dy*3);
+            fab1.animate().translationY(-dy*2);
+            fab2.animate().translationY(-dy);
+        }
+    }
+    //동그라미버튼
+    private void getAllWidgets() {
+        Log.e(LOG_TAG, "MainActivity.getAllWidgets");
+        //fabAddPerson = (FloatingActionButton) findViewById(R.id.fab);
+        fab2 = (FloatingActionButton)findViewById(R.id.fab_2);
+       // lvPersonNameList = (ListView) findViewById(R.id.lvPersonNameList);
+    }
+    private void bindWidgetsWithEvents() {
+        Log.e(LOG_TAG, "MainActivity.bindWidgetsWithEvents");
+        //fabAddPerson.setOnClickListener(this);
+        fab2.setOnClickListener(this);
+
+    }
+
+    //수정
+    @Override
+    public void onClick(View v) {
+//        switch (v.getId()) {
+//            case R.id.fab_2:
+//                addOrUpdatePersonDetailsDialog(null,-1);
+//                break;
+//            case R.id.fab_1:
+//                Toast.makeText(MainActivity.this, "영수증인식", Toast.LENGTH_SHORT).show();
+//                //Intent intent = new Intent(getApplicationContext(), UpdateSpend.class);
+//                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                //getApplicationContext().startActivity(intent);
+//                break;
+//
+        //       }
+    }
+
+    /*
+    //0629 데이터 불러오는 다이얼로그
+    public void dataListDialog(final DataDetailsModel model, final int date){
+
+        LayoutInflater li = LayoutInflater.from(MainActivity.this);//뷰를 띄워주는 역할
+        View promptsView = li.inflate(R.layout.inflate_list_item, null);//뷰 생성 : 여기서 데이터베이스 리스트 받아오면 될꺼같은데 안됨ㅠ
+
+        AlertDialog.Builder dataDialog = new AlertDialog.Builder(MainActivity.this);//다이얼 로그 생성하기 위한 빌더 얻기
+        //myRealm = Realm.getInstance(DataList.getInstance());
+
+        //final DataDetailsModel[] items = dataDetailsModelArrayList.toArray(new DataDetailsModel[dataDetailsModelArrayList.size()]);
+        //ArrayAdapter<DataDetailsModel> ad=new ArrayAdapter<DataDetailsModel>(this,android.R.layout.simple_list_item_1, items);
+
+        //dataDialog.setView(dataDetailsModelArrayList.get(date).getDate());
+
+        dataDialog.setTitle(dataDetailsModelArrayList.get(date).getDate().toString()+""); //데이터베이스 아이디로 날짜 받아오기
+
+        dataDialog.setMessage(dataDetailsModelArrayList.get(date).getName().toString() + " " + dataDetailsModelArrayList.get(date).getPrice()); //데이터베이스 아이디로 날짜 받아오기
+
+        //lvPersonNameList.setAdapter(ad);
+        final AlertDialog dialog = dataDialog.create();//다이얼 로그 객체 얻어오기
+        dialog.show();// 다이얼로그 보여주기
+
+    }
+*/
+
 
 }
