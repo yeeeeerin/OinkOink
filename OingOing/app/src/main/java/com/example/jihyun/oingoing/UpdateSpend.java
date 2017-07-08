@@ -123,6 +123,7 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
                             MainActivity.class);//다음 넘어갈 클래스 지정
 
                     startActivity(intent);//다음 화면으로 넘어간다
+                    finish();
                 }
                 else{
                     subDialog.show();

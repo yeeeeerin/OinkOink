@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(getApplicationContext(), UpdateSpend.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(intent);
+                finish();
             }
         });
 
@@ -224,6 +225,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ///--------------------db관련 함수들-----------------------
     ///-----------------------------------------------------
 
+    public static MainActivity getInstance() {
+        Log.e(LOG_TAG, "DataList.getInstance");
+        return instance;
+    }
+
     private void setPersonDetailsAdapter() {
         Log.e(LOG_TAG, "DataList.setPersonDetailsAdapter");
         dataDetailsAdapter = new DataDetailsAdapter(MainActivity.this, dataDetailsModelArrayList);
@@ -243,6 +249,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             id = myRealm.where(DataDetailsModel.class).max("id").intValue() + 1;
         myRealm.commitTransaction();
         dataDetailsAdapter.notifyDataSetChanged();
+    }
+
+
+    public void deleteData(int personId, int position) {
+        Log.e(LOG_TAG, "DataList.deletePerson");
+        RealmResults<DataDetailsModel> results = myRealm.where(DataDetailsModel.class).equalTo("id", personId).findAll();
+
+        myRealm.beginTransaction();
+        results.remove(0);
+        myRealm.commitTransaction();
+        dataDetailsModelArrayList.remove(position);
+        dataDetailsAdapter.notifyDataSetChanged();
+    }
+    public DataDetailsModel searchData(int personId) {
+        Log.e(LOG_TAG, "DataList.searchPerson");
+        RealmResults<DataDetailsModel> results = myRealm.where(DataDetailsModel.class).equalTo("id", personId).findAll();
+        myRealm.beginTransaction();
+        myRealm.commitTransaction();
+        return results.get(0);
     }
 
 

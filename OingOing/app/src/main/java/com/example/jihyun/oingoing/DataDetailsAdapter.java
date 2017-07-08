@@ -85,8 +85,10 @@ public class DataDetailsAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Log.e(LOG_TAG, "DataDetailsAdapter.getView.ivEditPesonDetail.onClick");
-                DataDetailsModel dataToEditModel= DataList.getInstance().searchData(dataDetailsArrayList.get(position).getId());
-                DataList.getInstance().addOrUpdatePersonDetailsDialog(dataToEditModel,position);
+                //DataDetailsModel dataToEditModel= DataList.getInstance().searchData(dataDetailsArrayList.get(position).getId()); //추가
+                //DataList.getInstance().addOrUpdatePersonDetailsDialog(dataToEditModel,position); // 추가
+                DataDetailsModel dataToEditModel= MainActivity.getInstance().searchData(dataDetailsArrayList.get(position).getId());
+                MainActivity.getInstance().addOrUpdatePersonDetailsDialog(dataToEditModel,position);
             }
         });
         holder.ivDeletePerson.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +115,10 @@ public class DataDetailsAdapter extends BaseAdapter {
                 .setCancelable(true)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
-                        DataList.getInstance().deleteData(personId,position);
+                        //DataList.getInstance().deleteData(personId,position);
+                        //DataList.getInstance().deleteData(personId,position);
+                        MainActivity.getInstance().deleteData(personId,position); // 추가
+//
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
