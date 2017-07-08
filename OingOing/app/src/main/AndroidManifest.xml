@@ -24,7 +24,6 @@
             android:name=".DailyMoneySet"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".UpdateSpend"></activity>
-        <activity android:name=".DataList"></activity>
     </application>
 
 </manifest>

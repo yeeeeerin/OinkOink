@@ -103,9 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),DataList.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+
             }
         });
 //추가
