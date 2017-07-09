@@ -24,6 +24,11 @@ public class DataDetailsAdapter extends BaseAdapter {
     private ArrayList<DataDetailsModel> dataDetailsArrayList;
     private Context context;
     private LayoutInflater inflater;
+    private String date;
+
+    public void setDate(String date){
+        this.date = date;
+    }
 
     public DataDetailsAdapter(Context context, ArrayList<DataDetailsModel> dataDetailsArrayList) {
         this.context = context;
@@ -54,7 +59,8 @@ public class DataDetailsAdapter extends BaseAdapter {
         Log.e(LOG_TAG, "DataDetailsAdapter.getView");
         View v = convertView;
         Holder holder;
-        if (v == null) {
+        Log.e("day", "getview"+dataDetailsArrayList.get(position).getDate() + "   " +date);
+        if (v == null && date.equals(dataDetailsArrayList.get(position).getDate())) {
             v = inflater.inflate(R.layout.inflate_list_item, null);
             holder = new Holder();
             holder.tvPersonName = (TextView) v.findViewById(R.id.tvPersonName);

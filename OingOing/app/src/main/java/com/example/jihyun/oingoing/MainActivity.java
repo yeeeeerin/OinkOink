@@ -1,6 +1,8 @@
 package com.example.jihyun.oingoing;
 
+import android.app.Dialog;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -32,6 +34,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -56,7 +59,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static MainActivity instance;
     private AlertDialog.Builder subDialog;
 
-    int setdate;
+    String SetDate; // 선택 날짜 설정
+
+    SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
+
+
     //----------------------------
 
 
@@ -164,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter1 = new MonthAdapter(this);
 
         /*adapter2 = new DailyAdapter(this);
-
         adapter2.addAdapter(new accountItem("점심", 7000, R.drawable.stamp));
         adapter2.addAdapter(new accountItem("카페", 5900, R.drawable.stamp));*/
 
@@ -172,10 +178,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       /*  dailyAmountView.setAdapter(adapter2);*/
         monthText.setText(adapter1.getCurrentYear() + "년" + adapter1.getCurrentMonth() + "월");
 
+        // 달력창 클릭시
         monthView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showMessage();
+                showCostom(MainActivity.this,position);
             }
         });
 
@@ -201,22 +208,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
     }
-    // 요일 클릭시 대화창
-    public void showMessage(){
-        android.app.AlertDialog.Builder builder= new android.app.AlertDialog.Builder(this);
-        builder.setTitle("요일");
-        builder.setMessage("종료하시겠습니까?");
-        builder.setIcon(android.R.drawable.ic_dialog_alert);
-        //"예"버튼을 눌렀을떄
-        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        android.app.AlertDialog dialog =builder.create();
-        dialog.show();
 
+    // 요일 클릭시 대화창
+    public void showCostom(Context context, int position){
+
+        Dialog dialog=new Dialog(context);
+        // dialog화면의 정보를 lay_customdialog으로
+        dialog.setContentView(R.layout.lay_customdialog);
+
+        StringBuffer date=new StringBuffer();
+
+
+        TextView txt_year =(TextView)dialog.findViewById(R.id.txt_year);
+        TextView txt_month=(TextView)dialog.findViewById(R.id.txt_month);
+        TextView txt_day=(TextView)dialog.findViewById(R.id.txt_day);
+
+        String year=String.valueOf(adapter1.getCurrentYear());
+        String month=String.valueOf(adapter1.getCurrentMonth());
+        String day=String.valueOf(adapter1.items[position].date);
+
+        if (Integer.parseInt(month) < 10){
+            month = "0"+month;
+        }
+        if(Integer.parseInt(day) < 10)
+            day = "0"+day;
+
+
+        txt_year.setText(year);
+        txt_month.setText(month);
+        txt_day.setText(day);
+
+
+
+        Log.e("day", year+month+day);
+
+
+        dataDetailsAdapter.setDate(year+month+day);
+
+       // dialog.show();
     }
 
 
@@ -231,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setPersonDetailsAdapter() {
         Log.e(LOG_TAG, "DataList.setPersonDetailsAdapter");
         dataDetailsAdapter = new DataDetailsAdapter(MainActivity.this, dataDetailsModelArrayList);
+        dataDetailsAdapter.setDate(transFormat.format(new Date()));
         lvPersonNameList.setAdapter(dataDetailsAdapter);//데이터 리스트 보여주는 함수
     }
 
@@ -331,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     DataDetailsModel dataDetailsModel = new DataDetailsModel();
                     dataDetailsModel.setName(selItem);
                     dataDetailsModel.setPrice(Integer.parseInt(etAddIncome.getText().toString()));
-                    dataDetailsModel.setDate(new Date()); //date추가
+                    dataDetailsModel.setDate(transFormat.format(new Date())); //date추가
 
                     Log.d("ee",dataDetailsModel.getDate().toString());
                     if (model == null)//데이터베이스를 새로 생성하겠다!!
@@ -419,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.e(LOG_TAG, "MainActivity.getAllWidgets");
         //fabAddPerson = (FloatingActionButton) findViewById(R.id.fab);
         fab2 = (FloatingActionButton)findViewById(R.id.fab_2);
-       // lvPersonNameList = (ListView) findViewById(R.id.lvPersonNameList);
+        // lvPersonNameList = (ListView) findViewById(R.id.lvPersonNameList);
     }
     private void bindWidgetsWithEvents() {
         Log.e(LOG_TAG, "MainActivity.bindWidgetsWithEvents");
@@ -448,26 +478,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*
     //0629 데이터 불러오는 다이얼로그
     public void dataListDialog(final DataDetailsModel model, final int date){
-
         LayoutInflater li = LayoutInflater.from(MainActivity.this);//뷰를 띄워주는 역할
         View promptsView = li.inflate(R.layout.inflate_list_item, null);//뷰 생성 : 여기서 데이터베이스 리스트 받아오면 될꺼같은데 안됨ㅠ
-
         AlertDialog.Builder dataDialog = new AlertDialog.Builder(MainActivity.this);//다이얼 로그 생성하기 위한 빌더 얻기
         //myRealm = Realm.getInstance(DataList.getInstance());
-
         //final DataDetailsModel[] items = dataDetailsModelArrayList.toArray(new DataDetailsModel[dataDetailsModelArrayList.size()]);
         //ArrayAdapter<DataDetailsModel> ad=new ArrayAdapter<DataDetailsModel>(this,android.R.layout.simple_list_item_1, items);
-
         //dataDialog.setView(dataDetailsModelArrayList.get(date).getDate());
-
         dataDialog.setTitle(dataDetailsModelArrayList.get(date).getDate().toString()+""); //데이터베이스 아이디로 날짜 받아오기
-
         dataDialog.setMessage(dataDetailsModelArrayList.get(date).getName().toString() + " " + dataDetailsModelArrayList.get(date).getPrice()); //데이터베이스 아이디로 날짜 받아오기
-
         //lvPersonNameList.setAdapter(ad);
         final AlertDialog dialog = dataDialog.create();//다이얼 로그 객체 얻어오기
         dialog.show();// 다이얼로그 보여주기
-
     }
 */
 

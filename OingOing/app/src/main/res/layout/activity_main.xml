@@ -130,8 +130,8 @@
                 </GridView>
 
 
-
-            </LinearLayout>
+        <!-- 수입 , 지출 list -->
+        </LinearLayout>
 
             <ListView
                 android:id="@+id/lvPersonNameList"
@@ -150,6 +150,9 @@
                 android:progress="40"/>
 
         </LinearLayout>
+
+
+
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"

@@ -4,6 +4,7 @@ package com.example.jihyun.oingoing;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -46,7 +47,10 @@ public class MonthAdapter extends BaseAdapter {
 
         Date date = new Date();
         // calendar에 현재 시간 설정
+
         calendar = Calendar.getInstance();
+
+
         calendar.setTime(date);
         recalculate();
         resetDayNumbers();
@@ -88,6 +92,8 @@ public class MonthAdapter extends BaseAdapter {
         curYear = calendar.get(Calendar.YEAR);
         curMonth = calendar.get(Calendar.MONTH);
         lastDay = getLastDay(curYear,curMonth);
+
+
     }
 
     public void resetDayNumbers() {
