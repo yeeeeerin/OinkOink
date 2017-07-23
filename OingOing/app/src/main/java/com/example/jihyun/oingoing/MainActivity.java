@@ -462,11 +462,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     dataDetailsModel.setPrice(Integer.parseInt(etAddPersonAge.getText().toString()));
                     //dataDetailsModel.setDate(new Date());
                     dataDetailsModel.setMoney_set(model.getMoney_set());
-                    if (model == null)
-                        Log.d("ee","nono");
-                        // addDataToRealm(dataDetailsModel);
-                    else
-                        updatePersonDetails(dataDetailsModel, position, model.getId());
+
+                    updatePersonDetails(dataDetailsModel, position, model.getId());
                     dialog.cancel();
                 } else {
                     subDialog.show();
@@ -474,23 +471,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-    private void addDataToRealm22(DataDetailsModel model) {
-        Log.e(LOG_TAG, "DataList.addDataToRealm");
 
-
-        myRealm.beginTransaction();
-
-        DataDetailsModel dataDetailsModel = myRealm.createObject(DataDetailsModel.class);
-        dataDetailsModel.setId(id+dataDetailsModelArrayList.size()); //id+남아있는리스트개수를 해줘야해
-        dataDetailsModel.setName(model.getName());
-        dataDetailsModel.setPrice(model.getPrice());
-        dataDetailsModel.setDate(model.getDate());
-        dataDetailsModel.setMoney_set(model.getMoney_set());
-        dataDetailsModelArrayList.add(dataDetailsModel);
-        myRealm.commitTransaction();
-        dataDetailsAdapter.notifyDataSetChanged();
-        id++;
-    }
 
     public void updatePersonDetails22(DataDetailsModel model,int position,int personID) {
         Log.e(LOG_TAG, "DataList.updatePersonDetails");
@@ -522,16 +503,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dataDetailsModelArrayList.clear();
         myRealm.close();
     }
-
-
-
-
-
-
-
-
-
-
 
 
 
