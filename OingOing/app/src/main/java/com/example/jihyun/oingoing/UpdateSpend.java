@@ -59,7 +59,7 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
     String mCurrentPhotoPath;
 
     //데이터베이스부분
-    private static int id=1;
+    //private static int id=;
     private Realm myRealm;
     private static ArrayList<DataDetailsModel> dataDetailsModelArrayList = new ArrayList<>();
     private DataDetailsAdapter dataDetailsAdapter;
@@ -72,7 +72,7 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
 
         myRealm = Realm.getInstance(UpdateSpend.this);
         dataDetailsAdapter = new DataDetailsAdapter(UpdateSpend.this, dataDetailsModelArrayList);
-        getAllUsers(); // 리스트에 데이터베이스의 모든 데이터 넣기
+        //getAllUsers(); // 리스트에 데이터베이스의 모든 데이터 넣기
 
         //입력 다 안했을 때 뜨는 다이얼로그
         subDialog = new AlertDialog.Builder(UpdateSpend.this)
@@ -108,7 +108,7 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
                     //데이터베이스에 추가
                     myRealm.beginTransaction();
                     DataDetailsModel dataDetailsModel = myRealm.createObject(DataDetailsModel.class);
-                    dataDetailsModel.setId(id+dataDetailsModelArrayList.size());
+                    dataDetailsModel.setId(MainActivity.id);
                     dataDetailsModel.setName(selItem);
                     dataDetailsModel.setPrice(money);
                     dataDetailsModel.setDate(transFormat.format(new Date()));
@@ -116,7 +116,7 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
                     dataDetailsModelArrayList.add(dataDetailsModel);
                     myRealm.commitTransaction();
                     dataDetailsAdapter.notifyDataSetChanged();
-                    id++;
+                    MainActivity.id++;
 
                     //메인으로 돌아가기
                     Intent intent = new Intent(getApplicationContext(),//현재화면의
@@ -176,6 +176,7 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
     }
 
     //데이터베이스의 리스트를 저장
+    /*
     private void getAllUsers() {
         RealmResults<DataDetailsModel> results = myRealm.where(DataDetailsModel.class).findAll();
         myRealm.beginTransaction();
@@ -183,11 +184,11 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
             dataDetailsModelArrayList.add(results.get(i));
         }
         if(results.size()>0)
-            id = myRealm.where(DataDetailsModel.class).max("id").intValue() + 1;
+            MainActivity.id = myRealm.where(DataDetailsModel.class).max("id").intValue() + 1;
         myRealm.commitTransaction();
         dataDetailsAdapter.notifyDataSetChanged();
     }
-
+*/
     public void onClick(View v) {
 
         switch (v.getId()){

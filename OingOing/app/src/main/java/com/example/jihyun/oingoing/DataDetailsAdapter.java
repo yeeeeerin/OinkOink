@@ -60,7 +60,7 @@ public class DataDetailsAdapter extends BaseAdapter {
         View v = convertView;
         Holder holder;
         Log.e("day", "getview"+dataDetailsArrayList.get(position).getDate() + "   " +date);
-        if (v == null && date.equals(dataDetailsArrayList.get(position).getDate())) {
+        if (v == null ) {
             v = inflater.inflate(R.layout.inflate_list_item, null);
             holder = new Holder();
             holder.tvPersonName = (TextView) v.findViewById(R.id.tvPersonName);
@@ -83,7 +83,7 @@ public class DataDetailsAdapter extends BaseAdapter {
         }
         if(dataDetailsArrayList.get(position).isInOrOut() == false)
             holder.tvPersonName.setTextColor(Color.rgb(0, 0, 0));
-
+        ///
 
 
         holder.tvPersonPrice.setText(""+dataDetailsArrayList.get(position).getPrice());

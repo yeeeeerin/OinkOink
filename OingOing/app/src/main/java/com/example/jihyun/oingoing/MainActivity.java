@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayAdapter adapter;
     //------------db-------------
 
-    private static int id = 1;
+    public static int id = 1;
     private Realm myRealm;
     private ListView lvPersonNameList;
     private static ArrayList<DataDetailsModel> dataDetailsModelArrayList = new ArrayList<>();
@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         /////db///////////
+
+        SetDate="20170719";
         lvPersonNameList = (ListView) findViewById(R.id.lvPersonNameList);
         myRealm = Realm.getInstance(MainActivity.this);
         instance = this;
@@ -245,6 +247,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         dataDetailsAdapter.setDate(year+month+day);
 
+        SetDate = year+month+day;
+
+        getAllUsers();
+
        // dialog.show();
     }
 
@@ -268,7 +274,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //데이터 리스트 가져오는 함수
     private void getAllUsers() {
         Log.e(LOG_TAG, "DataList.getAllUsers");
-        RealmResults<DataDetailsModel> results = myRealm.where(DataDetailsModel.class).findAll();
+        dataDetailsModelArrayList.clear();
+        RealmResults<DataDetailsModel> results = myRealm.where(DataDetailsModel.class).equalTo("date",SetDate).findAll();
         myRealm.beginTransaction();
         for (int i = 0; i < results.size(); i++) {
             dataDetailsModelArrayList.add(results.get(i));
@@ -383,7 +390,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myRealm.beginTransaction();
 
         DataDetailsModel dataDetailsModel = myRealm.createObject(DataDetailsModel.class);
-        dataDetailsModel.setId(id+dataDetailsModelArrayList.size()); //id+남아있는리스트개수를 해줘야해
+        dataDetailsModel.setId(id); //id+남아있는리스트개수를 해줘야해
         dataDetailsModel.setName(model.getName());
         dataDetailsModel.setPrice(model.getPrice());
         dataDetailsModel.setDate(model.getDate());
