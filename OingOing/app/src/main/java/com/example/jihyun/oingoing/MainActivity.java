@@ -245,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.e("day", year+month+day);
 
 
-        dataDetailsAdapter.setDate(year+month+day);
 
         SetDate = year+month+day;
 
@@ -266,7 +265,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void setPersonDetailsAdapter() {
         Log.e(LOG_TAG, "DataList.setPersonDetailsAdapter");
         dataDetailsAdapter = new DataDetailsAdapter(MainActivity.this, dataDetailsModelArrayList);
-        dataDetailsAdapter.setDate(transFormat.format(new Date()));
         lvPersonNameList.setAdapter(dataDetailsAdapter);//데이터 리스트 보여주는 함수
     }
 

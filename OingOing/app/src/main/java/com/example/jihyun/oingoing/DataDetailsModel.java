@@ -22,6 +22,7 @@ public class DataDetailsModel extends RealmObject {
     private boolean InOrOut = false; //false 수입 true 지출
 
 
+
     public boolean isInOrOut() { return InOrOut; }
     public void setInOrOut(boolean inOrOut) { InOrOut = inOrOut; }
 
