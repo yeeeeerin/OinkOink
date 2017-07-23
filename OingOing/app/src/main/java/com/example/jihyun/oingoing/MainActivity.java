@@ -326,6 +326,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainDialog.setView(promptsView);//알림창 지정된 레이아웃을 띄운다
         mainDialog.setTitle("수입 입력");
 
+
+
         //이 변수들은 income_dialog.xml에서 가져온 아이들, 즉 한 엑티비티에 뷰를 두개 가져온 것이다
         //위에서 View promptsViewView이 문장을 통해 뷰를 생성했기 때문에 사용이 가능하다
         final Spinner etAddCategory = (Spinner) promptsView.findViewById(R.id.setCategory);
@@ -413,6 +415,105 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
+
+
+
+    public void addOrUpdatePersonDetailsDialog22(final DataDetailsModel model,final int position) {
+//subdialog
+        Log.e(LOG_TAG, "DataList.addOrUpdatePersonDetailsDialog");
+        subDialog = new AlertDialog.Builder(MainActivity.this)
+                .setMessage("모두 입력해주세요")
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg2, int which) {
+                        dlg2.cancel();
+                    }
+                });
+//maindialog
+        LayoutInflater li = LayoutInflater.from(MainActivity.this);
+        View promptsView = li.inflate(R.layout.income_dialog, null);
+        AlertDialog.Builder mainDialog = new AlertDialog.Builder(MainActivity.this);
+        mainDialog.setView(promptsView);
+        final EditText etAddPersonName = (EditText) promptsView.findViewById(R.id.setCategory);
+        final EditText etAddPersonAge = (EditText) promptsView.findViewById(R.id.setIncome);
+        if (model != null) {
+            etAddPersonName.setText(model.getName());
+            etAddPersonAge.setText(String.valueOf(model.getPrice()));
+        }
+        mainDialog.setCancelable(false)
+                .setPositiveButton("Ok", null)
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog dialog = mainDialog.create();
+        dialog.show();
+        Button b = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!Utility.isBlankField(etAddPersonName) && !Utility.isBlankField(etAddPersonAge)) {
+                    DataDetailsModel dataDetailsModel = new DataDetailsModel();
+                    dataDetailsModel.setName(etAddPersonName.getText().toString());
+                    dataDetailsModel.setPrice(Integer.parseInt(etAddPersonAge.getText().toString()));
+                    //dataDetailsModel.setDate(new Date());
+                    dataDetailsModel.setMoney_set(model.getMoney_set());
+                    if (model == null)
+                        Log.d("ee","nono");
+                        // addDataToRealm(dataDetailsModel);
+                    else
+                        updatePersonDetails(dataDetailsModel, position, model.getId());
+                    dialog.cancel();
+                } else {
+                    subDialog.show();
+                }
+            }
+        });
+    }
+    private void addDataToRealm22(DataDetailsModel model) {
+        Log.e(LOG_TAG, "DataList.addDataToRealm");
+
+
+        myRealm.beginTransaction();
+
+        DataDetailsModel dataDetailsModel = myRealm.createObject(DataDetailsModel.class);
+        dataDetailsModel.setId(id+dataDetailsModelArrayList.size()); //id+남아있는리스트개수를 해줘야해
+        dataDetailsModel.setName(model.getName());
+        dataDetailsModel.setPrice(model.getPrice());
+        dataDetailsModel.setDate(model.getDate());
+        dataDetailsModel.setMoney_set(model.getMoney_set());
+        dataDetailsModelArrayList.add(dataDetailsModel);
+        myRealm.commitTransaction();
+        dataDetailsAdapter.notifyDataSetChanged();
+        id++;
+    }
+
+    public void updatePersonDetails22(DataDetailsModel model,int position,int personID) {
+        Log.e(LOG_TAG, "DataList.updatePersonDetails");
+        DataDetailsModel editPersonDetails = myRealm.where(DataDetailsModel.class).equalTo("id", personID).findFirst();
+        myRealm.beginTransaction();
+        editPersonDetails.setName(model.getName());
+        editPersonDetails.setPrice(model.getPrice());
+        myRealm.commitTransaction();
+        dataDetailsModelArrayList.set(position, editPersonDetails);
+        dataDetailsAdapter.notifyDataSetChanged();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     // db삭제
     // 앱이 종료되었을  onCreate와 반대로 액티비티가 종료 될 때 onDestroy가 나타난다
     protected void onDestroy() {
@@ -421,6 +522,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dataDetailsModelArrayList.clear();
         myRealm.close();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ///--------------------db함수 끝-------------------
 

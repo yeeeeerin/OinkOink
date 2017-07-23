@@ -90,7 +90,7 @@ public class DataDetailsAdapter extends BaseAdapter {
                 //DataDetailsModel dataToEditModel= DataList.getInstance().searchData(dataDetailsArrayList.get(position).getId()); //추가
                 //DataList.getInstance().addOrUpdatePersonDetailsDialog(dataToEditModel,position); // 추가
                 DataDetailsModel dataToEditModel= MainActivity.getInstance().searchData(dataDetailsArrayList.get(position).getId());
-                MainActivity.getInstance().addOrUpdatePersonDetailsDialog(dataToEditModel,position);
+                MainActivity.getInstance().addOrUpdatePersonDetailsDialog22(dataToEditModel,position);
             }
         });
         holder.ivDeletePerson.setOnClickListener(new View.OnClickListener() {
