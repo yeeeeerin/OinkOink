@@ -34,9 +34,11 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     String SetDate; // 선택 날짜 설정
 
-    SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
+    SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-M-d", Locale.KOREA);
 
 
     //----------------------------
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(LOG_TAG, "MainActivity.OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
 
         /////db///////////
@@ -116,6 +120,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
+
+
+        getDailyMoney();
+
+
 //추가
         fab1 = (FloatingActionButton)findViewById(R.id.fab_1);
         fab2 = (FloatingActionButton)findViewById(R.id.fab_2);
@@ -230,12 +240,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String month=String.valueOf(adapter1.getCurrentMonth());
         String day=String.valueOf(adapter1.items[position].date);
 
+
+        /*
         if (Integer.parseInt(month) < 10){
             month = "0"+month;
         }
         if(Integer.parseInt(day) < 10)
             day = "0"+day;
-
+*/
 
         txt_year.setText(year);
         txt_month.setText(month);
@@ -243,16 +255,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        Log.e("day", year+month+day);
+        Log.e("day", year+"-"+month+"-"+day);
 
 
 
-        SetDate = year+month+day;
+        SetDate = year+"-"+month+"-"+day;
 
         getAllUsers();
 
        // dialog.show();
     }
+
+
+//일일설정약 db에서 데이터 가져오기
+    private void getDailyMoney(){
+
+        try {
+            Date d = new SimpleDateFormat("yyyy-M-d").parse(SetDate);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        RealmResults<DailyMoneyModel> results = myRealm.where(DailyMoneyModel.class).findAll();
+        Log.e("ee", results.get(0).getEndDate());
+
+    }
+
 
 
     ///--------------------db관련 함수들-----------------------
@@ -418,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-
+////update를 위한것
     public void addOrUpdatePersonDetailsDialog22(final DataDetailsModel model,final int position) {
 //subdialog
         Log.e(LOG_TAG, "DataList.addOrUpdatePersonDetailsDialog");
@@ -462,8 +492,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     dataDetailsModel.setPrice(Integer.parseInt(etAddPersonAge.getText().toString()));
                     //dataDetailsModel.setDate(new Date());
                     dataDetailsModel.setMoney_set(model.getMoney_set());
-
-                    updatePersonDetails(dataDetailsModel, position, model.getId());
+                    if (model == null)
+                        Log.d("ee","nono");
+                        // addDataToRealm(dataDetailsModel);
+                    else
+                        updatePersonDetails(dataDetailsModel, position, model.getId());
                     dialog.cancel();
                 } else {
                     subDialog.show();
@@ -471,23 +504,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
-
-    public void updatePersonDetails22(DataDetailsModel model,int position,int personID) {
-        Log.e(LOG_TAG, "DataList.updatePersonDetails");
-        DataDetailsModel editPersonDetails = myRealm.where(DataDetailsModel.class).equalTo("id", personID).findFirst();
-        myRealm.beginTransaction();
-        editPersonDetails.setName(model.getName());
-        editPersonDetails.setPrice(model.getPrice());
-        myRealm.commitTransaction();
-        dataDetailsModelArrayList.set(position, editPersonDetails);
-        dataDetailsAdapter.notifyDataSetChanged();
-    }
-
-
-
-
-
 
 
 
@@ -503,6 +519,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dataDetailsModelArrayList.clear();
         myRealm.close();
     }
+
+
+
+
+
+
+
+
+
+
 
 
 

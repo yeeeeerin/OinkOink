@@ -124,6 +124,7 @@ public class DailyMoneySet extends AppCompatActivity implements View.OnClickList
                     DM.setMoney_set(dailymoney);
                     DM.setStartDate(start_date);
                     DM.setEndDate(end_date);
+
                     mRealm.commitTransaction();
 
                     Log.d("ee", AimName +"  " +dailymoney+"  "+start_date);

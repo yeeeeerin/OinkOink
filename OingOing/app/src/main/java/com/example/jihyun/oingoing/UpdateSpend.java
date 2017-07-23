@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -64,7 +65,7 @@ public class UpdateSpend extends AppCompatActivity implements View.OnClickListen
     private static ArrayList<DataDetailsModel> dataDetailsModelArrayList = new ArrayList<>();
     private DataDetailsAdapter dataDetailsAdapter;
     private AlertDialog.Builder subDialog;
-    SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
+    SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-M-d", Locale.KOREA);
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
