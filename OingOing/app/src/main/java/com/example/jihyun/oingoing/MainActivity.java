@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /////db///////////
 
-        SetDate="20170719";
+        SetDate="2017-7-19";
         lvPersonNameList = (ListView) findViewById(R.id.lvPersonNameList);
         myRealm = Realm.getInstance(MainActivity.this);
         instance = this;
@@ -272,6 +272,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         try {
             Date d = new SimpleDateFormat("yyyy-M-d").parse(SetDate);
+            Log.e("ee", d.toString()+"날짜 date변");
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -279,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         RealmResults<DailyMoneyModel> results = myRealm.where(DailyMoneyModel.class).findAll();
-        Log.e("ee", results.get(0).getEndDate());
+        Log.e("ee", results.get(results.size()-1).getEndDate());
 
     }
 
