@@ -89,6 +89,12 @@ public class DailyMoneySet extends AppCompatActivity implements View.OnClickList
 
 
 
+
+
+    }
+    //
+    public void btnSet(View v){
+
         //입력 다 안했을 때 뜨는 다이얼로그
         subDialog = new AlertDialog.Builder(DailyMoneySet.this)
                 .setMessage("모두 입력해주세요")
@@ -100,50 +106,45 @@ public class DailyMoneySet extends AppCompatActivity implements View.OnClickList
                     }
                 });
 
-
-        setbutton=(Button) findViewById(setButton);
-        setbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!Utility.isBlankField(setMoney)) {
-                    //금액 가져오기
-                    String daily_money = setMoney.getText().toString();
-                    String AimName = Aim.getText().toString();
-                    int dailymoney= Integer.parseInt(daily_money);
-                    String start_date=startDate.getText().toString();
-                    String end_date=endDate.getText().toString();
+        if(!Utility.isBlankField(setMoney) && !Utility.isBlankField(Aim)
+                && !Utility.isBlankField(startDate) && !Utility.isBlankField(endDate)) {
+            //금액 가져오기
+            String daily_money = setMoney.getText().toString();
+            String AimName = Aim.getText().toString();
+            int dailymoney= Integer.parseInt(daily_money);
+            String start_date=startDate.getText().toString();
+            String end_date=endDate.getText().toString();
 
 
 
 
-                    //데이터베이스에 추가하기
-                    mRealm.beginTransaction();
+            //데이터베이스에 추가하기
+            mRealm.beginTransaction();
 
-                    DailyMoneyModel DM = mRealm.createObject(DailyMoneyModel.class);
-                    DM.setAimName(AimName);
-                    DM.setMoney_set(dailymoney);
-                    DM.setStartDate(start_date);
-                    DM.setEndDate(end_date);
+            DailyMoneyModel DM = mRealm.createObject(DailyMoneyModel.class);
+            DM.setAimName(AimName);
+            DM.setMoney_set(dailymoney);
+            DM.setStartDate(start_date);
+            DM.setEndDate(end_date);
 
-                    mRealm.commitTransaction();
+            mRealm.commitTransaction();
 
-                    Log.d("ee", AimName +"  " +dailymoney+"  "+start_date);
+            Log.d("ee", AimName +"  " +dailymoney+"  "+start_date);
 
 
-                    //메인으로 돌아가기
-                    Intent intent = new Intent(getApplicationContext(),//현재화면의
-                            MainActivity.class);//다음 넘어갈 클래스 지정
+            //메인으로 돌아가기
+            Intent intent = new Intent(getApplicationContext(),//현재화면의
+                    MainActivity.class);//다음 넘어갈 클래스 지정
 
-                    startActivity(intent);//다음 화면으로 넘어간다
-                    finish();
-                }
-                else{
+            startActivity(intent);//다음 화면으로 넘어간다
+            finish();
+        }
+        else{
 
-                    subDialog.show();
+            subDialog.show();
 
-                }
-            }
-        });
+        }
+
     }
 
 
