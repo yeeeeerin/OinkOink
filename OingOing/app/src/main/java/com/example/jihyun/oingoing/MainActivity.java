@@ -1,18 +1,24 @@
 package com.example.jihyun.oingoing;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -573,6 +579,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ///--------------------db함수 끝-------------------
 
+
+    //푸시알림 설정
+    public void NotificationSomethings(){
+        Resources res=getResources();
+        NotificationCompat.Builder builder=new NotificationCompat.Builder(this);
+        builder.setContentTitle("일일설정액 초과!")
+                .setContentText("그만 써!")
+                .setTicker("일일 설정액 초과!")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(res,R.mipmap.ic_launcher))
+                .setAutoCancel(true)
+                .setWhen(System.currentTimeMillis())
+                .setDefaults(Notification.DEFAULT_ALL);
+        if(android.os.Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP){
+            builder.setCategory(Notification.CATEGORY_MESSAGE)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setVisibility(Notification.VISIBILITY_PUBLIC);
+        }
+
+        NotificationManager nm=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(20,builder.build());
+    }
 
 
 
