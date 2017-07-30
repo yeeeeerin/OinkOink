@@ -247,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if(Integer.parseInt(day) < 10)
             day = "0"+day;
-*/
+        */
 
         txt_year.setText(year);
         txt_month.setText(month);
@@ -278,9 +278,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-
         RealmResults<DailyMoneyModel> results = myRealm.where(DailyMoneyModel.class).findAll();
-        Log.e("ee", results.get(results.size()-1).getEndDate());
+//        Log.e("ee", results.get(results.size()-1).getEndDate());
+
+
+
+
 
     }
 
@@ -314,6 +317,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             id = myRealm.where(DataDetailsModel.class).max("id").intValue() + 1;
         myRealm.commitTransaction();
         dataDetailsAdapter.notifyDataSetChanged();
+
+
+
+        int allm=0;
+        for(int j=0;j<dataDetailsModelArrayList.size();j++){
+            allm+=dataDetailsModelArrayList.get(j).getPrice();
+        }
+        //String m=String.valueOf(allm);
+
+        String string = Integer.toString(allm);
+
+
+
+        Log.e("money",string);
     }
 
 

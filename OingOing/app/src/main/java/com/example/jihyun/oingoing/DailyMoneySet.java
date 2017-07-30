@@ -18,18 +18,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 import static com.example.jihyun.oingoing.R.id.setButton;
 
-/**
- * Created by jihyun on 2017-04-30.
- */
 
 public class DailyMoneySet extends AppCompatActivity implements View.OnClickListener{
 
@@ -44,8 +44,9 @@ public class DailyMoneySet extends AppCompatActivity implements View.OnClickList
     private EditText startDate, endDate, setMoney;
     private EditText Aim; // 목표
 
-    private AlertDialog.Builder subDialog;//입력 다 안했을때 뜨는 다이얼로
-
+    private AlertDialog.Builder subDialog;//입력 다 안했을때 뜨는 다이얼로그
+    private AlertDialog.Builder dateErrorDialog;//시작날짜>종료날짜 일떄 뜨는 다이얼로그
+    private AlertDialog.Builder overlap;//날짜가 겹치는 다이얼 로그가 있을 때 뜨는 다이얼로그
 
 
 
@@ -92,7 +93,7 @@ public class DailyMoneySet extends AppCompatActivity implements View.OnClickList
 
 
     }
-    //
+    //설정버튼 이벤트
     public void btnSet(View v){
 
         //입력 다 안했을 때 뜨는 다이얼로그
@@ -106,38 +107,122 @@ public class DailyMoneySet extends AppCompatActivity implements View.OnClickList
                     }
                 });
 
+
+        dateErrorDialog = new AlertDialog.Builder(DailyMoneySet.this)
+                .setMessage("종료날짜를 다시 설정해 주세요")
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg2, int which) {
+                        dlg2.cancel();
+                    }
+                });
+
+        overlap = new AlertDialog.Builder(DailyMoneySet.this)
+                .setMessage("겹치는 날짜가 존재합니다")
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg2, int which) {
+                        dlg2.cancel();
+                    }
+                });
+
+
+
+
+
         if(!Utility.isBlankField(setMoney) && !Utility.isBlankField(Aim)
                 && !Utility.isBlankField(startDate) && !Utility.isBlankField(endDate)) {
             //금액 가져오기
             String daily_money = setMoney.getText().toString();
             String AimName = Aim.getText().toString();
             int dailymoney= Integer.parseInt(daily_money);
-            String start_date=startDate.getText().toString();
-            String end_date=endDate.getText().toString();
+            //String start_date=startDate.getText().toString();
+            //String end_date=endDate.getText().toString();
 
 
 
+            //시작날짜 종료날찌 확인
+            try {
+                Date d_s = new SimpleDateFormat("yyyy-M-d").parse(startDate.getText().toString());
+                Date d_e = new SimpleDateFormat("yyyy-M-d").parse(endDate.getText().toString());
+                //Log.e("ee", d.toString()+"날짜 date변");
+                if(d_s.compareTo(d_e)>=0){
 
-            //데이터베이스에 추가하기
-            mRealm.beginTransaction();
-
-            DailyMoneyModel DM = mRealm.createObject(DailyMoneyModel.class);
-            DM.setAimName(AimName);
-            DM.setMoney_set(dailymoney);
-            DM.setStartDate(start_date);
-            DM.setEndDate(end_date);
-
-            mRealm.commitTransaction();
-
-            Log.d("ee", AimName +"  " +dailymoney+"  "+start_date);
+                    dateErrorDialog.show();
+                }
+                else{
 
 
-            //메인으로 돌아가기
-            Intent intent = new Intent(getApplicationContext(),//현재화면의
-                    MainActivity.class);//다음 넘어갈 클래스 지정
+                    //중복방지
+                    int count=0; //중복방지 변수
+                    RealmResults<DailyMoneyModel> results = mRealm.where(DailyMoneyModel.class)
+                            .findAll();
+                    mRealm.beginTransaction();
+                    for(int i=0;i<results.size();i++){
 
-            startActivity(intent);//다음 화면으로 넘어간다
-            finish();
+                        if(results.get(i).getstartDate().compareTo(d_s)<=0 &&            //resualts.startdate < d_s < resualts.EndDate
+                                d_s.compareTo(results.get(i).getEndDate())<=0){
+                            count++;
+                            break;
+                        }else if(results.get(i).getstartDate().compareTo(d_e)<=0 &&      //resualts.startdate < d_e < resualts.EndDate
+                                d_e.compareTo(results.get(i).getEndDate())<=0){
+                            count++;
+                            break;
+                        }else if (d_s.compareTo(results.get(i).getstartDate())<=0 &&     //d_s<resualts.startdate<d_e
+                                results.get(i).getstartDate().compareTo(d_e)<=0){
+                            count++;
+                            break;
+
+                        }else if(d_s.compareTo(results.get(i).getEndDate())<=0 &&        //d_s<resualts.Enddate<d_e
+                                results.get(i).getEndDate().compareTo(d_e)<=0){
+                            count++;
+                            break;
+                        }
+
+
+                    }
+                    mRealm.commitTransaction();
+
+
+                    if(count>0){
+                        overlap.show();
+                    }
+                    else{
+
+                        //데이터베이스에 추가하기
+                        mRealm.beginTransaction();
+
+                        DailyMoneyModel DM = mRealm.createObject(DailyMoneyModel.class);
+                        DM.setAimName(AimName);
+                        DM.setMoney_set(dailymoney);
+                        DM.setStartDate(d_s);
+                        DM.setEndDate(d_e);
+
+                        mRealm.commitTransaction();
+
+                        Log.d("ee", AimName +"  " +dailymoney+"  ");
+
+
+                        //메인으로 돌아가기
+                        Intent intent = new Intent(getApplicationContext(),//현재화면의
+                                MainActivity.class);//다음 넘어갈 클래스 지정
+
+                        startActivity(intent);//다음 화면으로 넘어간다
+                        finish();
+
+
+                    }
+
+
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
         }
         else{
 
