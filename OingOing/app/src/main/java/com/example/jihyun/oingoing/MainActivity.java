@@ -69,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //----------------------------
 
 
+    private int money_sum=0;
+
+
     private TextView monthText;
     private GridView monthView;
     //사용한 금액(데이터베이스?)
@@ -123,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        getDailyMoney();
+        //getDailyMoney();
 
 
 //추가
@@ -262,24 +265,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SetDate = year+"-"+month+"-"+day;
 
         getAllUsers();
+        getDailyMoney();
 
        // dialog.show();
     }
 
 
-//일일설정약 db에서 데이터 가져오기
+//일일설정약 db에서 데이터 가져오기 , 빼기
     private void getDailyMoney(){
 
         try {
             Date d = new SimpleDateFormat("yyyy-M-d").parse(SetDate);
             Log.e("ee", d.toString()+"날짜 date변");
 
+            RealmResults<DailyMoneyModel> results = myRealm.where(DailyMoneyModel.class)
+                    .lessThanOrEqualTo("startDate",d)
+                    .greaterThanOrEqualTo("endDate",d)
+                    .findAll();
+//        Log.e("ee", results.get(results.size()-1).getEndDate());
+            myRealm.beginTransaction();
+
+
+
+            if (results.size()>0) {
+                String string = Integer.toString(results.get(0).getMoney_set()-money_sum);
+
+                Log.e("money", "일일설정액 - 선택한 날짜 " + string);
+            }
+
+            myRealm.commitTransaction();
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        RealmResults<DailyMoneyModel> results = myRealm.where(DailyMoneyModel.class).findAll();
-//        Log.e("ee", results.get(results.size()-1).getEndDate());
 
 
 
@@ -320,16 +338,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        int allm=0;
+
+        //
+        money_sum=0;
         for(int j=0;j<dataDetailsModelArrayList.size();j++){
-            allm+=dataDetailsModelArrayList.get(j).getPrice();
+            money_sum+=dataDetailsModelArrayList.get(j).getPrice();
         }
-        //String m=String.valueOf(allm);
-
-        String string = Integer.toString(allm);
 
 
-
+        //test
+        String string = Integer.toString(money_sum);
         Log.e("money",string);
     }
 
