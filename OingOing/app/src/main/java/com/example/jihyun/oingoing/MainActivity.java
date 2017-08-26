@@ -96,7 +96,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /////db///////////
 
-        SetDate="2017-7-19";
+        //SetDate="2017-7-19";
+        Date dd=new Date();
+        SetDate=transFormat.format(dd);
         lvPersonNameList = (ListView) findViewById(R.id.lvPersonNameList);
         myRealm = Realm.getInstance(MainActivity.this);
         instance = this;
@@ -238,7 +240,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // dialog화면의 정보를 lay_customdialog으로
         dialog.setContentView(R.layout.lay_customdialog);
 
-        StringBuffer date=new StringBuffer();
 
 
         TextView txt_year =(TextView)dialog.findViewById(R.id.txt_year);
@@ -249,14 +250,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String month=String.valueOf(adapter1.getCurrentMonth());
         String day=String.valueOf(adapter1.items[position].date);
 
-
-        /*
-        if (Integer.parseInt(month) < 10){
-            month = "0"+month;
-        }
-        if(Integer.parseInt(day) < 10)
-            day = "0"+day;
-        */
 
         txt_year.setText(year);
         txt_month.setText(month);
@@ -276,6 +269,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        // dialog.show();
     }
 
+    //한달 단위로 일일설정액 clear여부 달력에 표시하는 함수
+    private void getMonthSetMoneyClear(){
+
+    }
 
 //일일설정약 db에서 데이터 가져오기 , 빼기
     private void getDailyMoney(){
@@ -341,9 +338,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             id = myRealm.where(DataDetailsModel.class).max("id").intValue() + 1;
         myRealm.commitTransaction();
         dataDetailsAdapter.notifyDataSetChanged();
-
-
-
 
         //
         money_sum=0;
@@ -569,14 +563,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-
-
-
-
-
-
-
-
     ///--------------------db함수 끝-------------------
 
 
@@ -644,37 +630,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //수정
     @Override
     public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.fab_2:
-//                addOrUpdatePersonDetailsDialog(null,-1);
-//                break;
-//            case R.id.fab_1:
-//                Toast.makeText(MainActivity.this, "영수증인식", Toast.LENGTH_SHORT).show();
-//                //Intent intent = new Intent(getApplicationContext(), UpdateSpend.class);
-//                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                //getApplicationContext().startActivity(intent);
-//                break;
-//
-        //       }
+
+
     }
-
-    /*
-    //0629 데이터 불러오는 다이얼로그
-    public void dataListDialog(final DataDetailsModel model, final int date){
-        LayoutInflater li = LayoutInflater.from(MainActivity.this);//뷰를 띄워주는 역할
-        View promptsView = li.inflate(R.layout.inflate_list_item, null);//뷰 생성 : 여기서 데이터베이스 리스트 받아오면 될꺼같은데 안됨ㅠ
-        AlertDialog.Builder dataDialog = new AlertDialog.Builder(MainActivity.this);//다이얼 로그 생성하기 위한 빌더 얻기
-        //myRealm = Realm.getInstance(DataList.getInstance());
-        //final DataDetailsModel[] items = dataDetailsModelArrayList.toArray(new DataDetailsModel[dataDetailsModelArrayList.size()]);
-        //ArrayAdapter<DataDetailsModel> ad=new ArrayAdapter<DataDetailsModel>(this,android.R.layout.simple_list_item_1, items);
-        //dataDialog.setView(dataDetailsModelArrayList.get(date).getDate());
-        dataDialog.setTitle(dataDetailsModelArrayList.get(date).getDate().toString()+""); //데이터베이스 아이디로 날짜 받아오기
-        dataDialog.setMessage(dataDetailsModelArrayList.get(date).getName().toString() + " " + dataDetailsModelArrayList.get(date).getPrice()); //데이터베이스 아이디로 날짜 받아오기
-        //lvPersonNameList.setAdapter(ad);
-        final AlertDialog dialog = dataDialog.create();//다이얼 로그 객체 얻어오기
-        dialog.show();// 다이얼로그 보여주기
-    }
-*/
-
-
 }

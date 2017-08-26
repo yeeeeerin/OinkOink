@@ -54,6 +54,7 @@ public class MonthAdapter extends BaseAdapter {
         calendar.setTime(date);
         recalculate();
         resetDayNumbers();
+
     }
 
     // 이전월로 설정
@@ -183,8 +184,7 @@ public class MonthAdapter extends BaseAdapter {
 
         // create a params
         GridView.LayoutParams params = new GridView.LayoutParams(
-                GridView.LayoutParams.MATCH_PARENT,
-                120);
+                GridView.LayoutParams.MATCH_PARENT, 120);
 
 
         //일요일에 빨간표시
@@ -195,10 +195,19 @@ public class MonthAdapter extends BaseAdapter {
         }
 
         // 오늘표시
-        if(items[position].date==0)
-
+        if(items[position].date==0) {
             view.setLayoutParams(params);
+        }
         view.setDate(items[position].date);
+
+        Date d=new Date();
+        calendar=Calendar.getInstance();
+        calendar.setTime(d);
+        if(items[position].date==calendar.get(Calendar.DAY_OF_MONTH)){
+            view.textView.setTextColor(Color.BLUE);
+        }
+
+
         return view;
     }
 
