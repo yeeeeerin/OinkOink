@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     final static String LOG_TAG = "myLogs";
     FloatingActionButton fab1, fab2, fab3, fab4;
-    ProgressBar ProgressBar;
+
     ArrayAdapter adapter;
     //------------db-------------
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView monthText;
     private GridView monthView;
     //사용한 금액(데이터베이스?)
-    private ListView dailyAmountView;
+   // private ListView dailyAmountView;
     private MonthAdapter adapter1;
     /* private DailyAdapter adapter2;*/
 
@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(LOG_TAG, "MainActivity.OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
 
         /////db///////////
@@ -149,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ToggleFab();
             }
         });
-
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,14 +164,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-//0627 데이터리스트불러오기
+
         fab4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //dataListDialog( , ); //날짜에 해당하는 리스트뷰 받아오기
-
+                //Toast.makeText(getApplicationContext(), dataDetailsModelArrayList.get(0).getDate(), Toast.LENGTH_LONG).show();
             }
         });
+
+
+
+
 
         ProgressBar progressBar=(ProgressBar) findViewById(R.id.progressBar);
         progressBar.setIndeterminate(false);
@@ -215,9 +215,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         monthPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Log.d("ee","다음달1");
                 adapter1.setPriviousMonth();
+                //Log.d("ee","다음달2");
                 adapter1.notifyDataSetChanged();
+                //Log.d("ee","다음달3");
                 monthText.setText(adapter1.getCurrentYear() + "년" + adapter1.getCurrentMonth() + "월");
+                ClearView();
             }
         });
         // monthNext버튼 클릭시
@@ -228,8 +232,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 adapter1.setNextMonth();
                 adapter1.notifyDataSetChanged();
                 monthText.setText(adapter1.getCurrentYear() + "년" + adapter1.getCurrentMonth() + "월");
+                ClearView();
             }
         });
+
+
+    }
+    //달력에 Clear도장 보여주는 함수
+    private void ClearView(){
+        Log.d("clear", Integer.toString(adapter1.getCurrentYear())+"  "+
+                        Integer.toString(adapter1.getCurrentMonth()));
+
+
 
     }
 
@@ -263,16 +277,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         SetDate = year+"-"+month+"-"+day;
 
+
+
         getAllUsers();
         getDailyMoney();
 
        // dialog.show();
     }
 
-    //한달 단위로 일일설정액 clear여부 달력에 표시하는 함수
-    private void getMonthSetMoneyClear(){
-
-    }
 
 //일일설정약 db에서 데이터 가져오기 , 빼기
     private void getDailyMoney(){
@@ -302,11 +314,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-
-
-
-
     }
+
 
 
 
@@ -339,8 +348,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myRealm.commitTransaction();
         dataDetailsAdapter.notifyDataSetChanged();
 
-        //
-        money_sum=0;
+        //그 날에 해당하는 돈 가져오는 코드드
+       money_sum=0;
         for(int j=0;j<dataDetailsModelArrayList.size();j++){
             money_sum+=dataDetailsModelArrayList.get(j).getPrice();
         }
@@ -350,6 +359,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String string = Integer.toString(money_sum);
         Log.e("money",string);
     }
+
 
 
     public void deleteData(int personId, int position) {
