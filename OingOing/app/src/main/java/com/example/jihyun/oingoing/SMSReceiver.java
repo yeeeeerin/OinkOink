@@ -19,9 +19,7 @@ public class SMSReceiver extends BroadcastReceiver {
     }
 
     public SimpleDateFormat format = new SimpleDateFormat("yyyy-M-d");
-    private Realm myRealm;
-    private DataDetailsAdapter dataDetailsAdapter;
-    private AlertDialog.Builder subDialog;
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -31,17 +29,19 @@ public class SMSReceiver extends BroadcastReceiver {
         Bundle myBundle = intent.getExtras();
         SmsMessage[] messages = null;
 
-        String[] content=null;
-        String[] content2=null;
+        String[] content = null;
+        String[] content2 = null;
 
         String strMessage = "";
         String sender = "";
         String datee = "";
-        String a=""; //지출금액
-        String b=""; //지출장소
+        String a = ""; //지출금액
+        String b = ""; //지출장소
 
         Date date = null;
 
+
+        int price =0;
         if (myBundle != null) {
             Object[] pdus = (Object[]) myBundle.get("pdus");
             messages = new SmsMessage[pdus.length];
@@ -79,80 +79,99 @@ public class SMSReceiver extends BroadcastReceiver {
             //국민은행 체킄카드 1588-1688
             if (sender.equals("15881688")) {
                 //체크
-                content=strMessage.split("\n");
-                a=content[4];
-                b=content[5];
+                content = strMessage.split("\n");
+                a = content[4];
+                b = content[5];
                 //날짜 : content[3], 07/07 13:45 이런형식
                 //지출내역에 등록
-                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a+"\n사용장소: " + b, Toast.LENGTH_LONG).show();
 
+                a = a.substring(0, a.length() - 1);
+                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a + "\n사용장소: " + b, Toast.LENGTH_LONG).show();
+
+
+                price = Integer.parseInt(a);
                 //신용카드
-                content=strMessage.split("\n");
-                content2=content[3].split(" ");
-                a=content2[0];
-                b=content[4];
+                // content=strMessage.split("\n");
+                // content2=content[3].split(" ");
+                // a=content2[0];
+                //b=content[4];
                 //날짜 : content[3], 2번째 07/07, 3번째 13:45 이런형식
-                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a+"\n사용장소: " + b, Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a+"\n사용장소: " + b, Toast.LENGTH_LONG).show();
             }
             //신한은행 1544-7200
-            else if(sender.equals("15447200")){
-                content=strMessage.split("\n");
-                content2=content[2].split(" ");
-                a=content2[1];
-                b=content2[2];
+            else if (sender.equals("15447200")) {
+                content = strMessage.split("\n");
+                content2 = content[2].split(" ");
+                a = content2[1];
+                b = content2[2];
                 //날짜 : content2[1], 2번째 07/07, content2[2] 0번째 13:45 이런형식
-                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a+"\n사용장소: " + b, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a + "\n사용장소: " + b, Toast.LENGTH_LONG).show();
+
+                price = Integer.parseInt(a);
             }
             //하나은행
-            else if(sender.equals("")){
-                content=strMessage.split("\n");
-                content2=content[2].split(" ");
-                a=content2[0];
-                b=content2[3];
+            else if (sender.equals("")) {
+                content = strMessage.split("\n");
+                content2 = content[2].split(" ");
+                a = content2[0];
+                b = content2[3];
                 //날짜 : content2[2] 1번째 07/07 2번째 13:45 이런형식
-                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a+"\n사용장소: " + b, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a + "\n사용장소: " + b, Toast.LENGTH_LONG).show();
+
+                price = Integer.parseInt(a);
             }
             //농협은행
-            else if(sender.equals("15881600")){
-                content=strMessage.split("\n");
-                a=content[2];
-                b=content[6];
+            else if (sender.equals("15881600")) {
+                content = strMessage.split("\n");
+                a = content[2];
+                b = content[6];
                 //날짜 : content[5], 0번째 07/07 1번째 13:45 이런형식(" "으로구분)
-                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a+"\n사용장소: " + b, Toast.LENGTH_LONG).show();
-            }
-            else if(sender.equals("01049392154")){
+                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a + "\n사용장소: " + b, Toast.LENGTH_LONG).show();
+
+                price = Integer.parseInt(a);
+            } else if (sender.equals("01049392154")) {
                 Log.d("ee", "문자왔숑");
-                content=strMessage.split("\n");
-                content2=content[2].split(" ");
-                a=content2[1];
-                b=content2[2];
-                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a+"\n사용장소: " + b, Toast.LENGTH_LONG).show();
+                content = strMessage.split("\n");
+                content2 = content[2].split(" ");
+                a = content2[1];
+                b = content2[2];
+                Toast.makeText(context, "SMS From:" + sender + "\n사용금액: " + a + "\n사용장소: " + b, Toast.LENGTH_LONG).show();
+
+                price = Integer.parseInt(a);
             }
             Log.d("ee", "문자왔숑---");
             //우리
             //기업
 
             //yerin
-            int price = Integer.parseInt(a);
-            if(price>0){
 
-                //데이터베이스에 추가
-                myRealm.beginTransaction();
-                DataDetailsModel dataDetailsModel = myRealm.createObject(DataDetailsModel.class);
-                dataDetailsModel.setId(MainActivity.id);
-                dataDetailsModel.setName(b);
-                dataDetailsModel.setPrice(price);
-                dataDetailsModel.setDate(format.format(date));
-                dataDetailsModel.setInOrOut(true); //지출
-                //dataDetailsModelArrayList.add(dataDetailsModel);
-                myRealm.commitTransaction();
-                dataDetailsAdapter.notifyDataSetChanged();
-                MainActivity.id++;
 
-            }
-            myRealm.close();
+            if(price>0)
+                addData(price,b,format.format(date),context);
         }
     }
+
+    //데이터 베이스에 추가
+    private void addData(int price ,String name, String date, Context context) {
+
+        Realm myRealm = Realm.getInstance(context);
+
+        myRealm.beginTransaction();
+        DataDetailsModel dataDetailsModel = myRealm.createObject(DataDetailsModel.class);
+        dataDetailsModel.setId(MainActivity.id);
+        dataDetailsModel.setName(name);
+        dataDetailsModel.setPrice(price);
+        dataDetailsModel.setDate(date);
+        dataDetailsModel.setInOrOut(true); //지출
+            //dataDetailsModelArrayList.add(dataDetailsModel);
+        myRealm.commitTransaction();
+        MainActivity.id++;
+
+        myRealm.close();
+
+    }
+
+
 
 
 }
