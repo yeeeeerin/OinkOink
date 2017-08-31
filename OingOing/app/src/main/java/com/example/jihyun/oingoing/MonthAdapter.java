@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -260,14 +261,26 @@ public class MonthAdapter extends BaseAdapter {
             view.textView.setTextColor(Color.BLACK);
         }
 
-        //클리어 했을 시
+        //클리어 했을 시 //꼭 이 위치에 넣어야 함
         if(position>0 && position<32) {
             String setDate = getCurrentYear() + "-" + getCurrentMonth() + "-" + position;
+            try {
+                Date md_cal = new SimpleDateFormat("yyyy-M-d").parse(setDate);
+                Date md_local=new Date(); // 현재 날짜
+               // String fd=new SimpleDateFormat("yyyy-M-d").format(md_local);
+               // md_local= new SimpleDateFormat("yyyy-M-d").parse(fd);
 
-            if(Clear_or_NoneClear(setDate)==true){
-                view.textView.setTextColor(Color.GREEN);
-                Log.d("clear2", setDate);
+
+                if(Clear_or_NoneClear(setDate)==true && md_cal.compareTo(md_local)<0){
+                    view.textView.setTextColor(Color.GREEN);
+                    Log.d("clear2", setDate);
+                }
+            }catch (ParseException e){
+
             }
+
+
+
 
         }
 
