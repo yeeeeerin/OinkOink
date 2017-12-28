@@ -54,6 +54,7 @@ import static android.R.id.progress;
 //test1
 //test3
 //test5
+//test7
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
