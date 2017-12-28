@@ -187,16 +187,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
+        //------------------------달력부분---------------------------//
         monthText = (TextView) findViewById(R.id.monthText);
         monthView = (GridView) findViewById(R.id.calendarView);
-      /*  dailyAmountView = (ListView) findViewById(R.id.listView);*/
 
         // 달력의 데이터
         adapter1 = new MonthAdapter(this);
-
-        /*adapter2 = new DailyAdapter(this);
-        adapter2.addAdapter(new accountItem("점심", 7000, R.drawable.stamp));
-        adapter2.addAdapter(new accountItem("카페", 5900, R.drawable.stamp));*/
 
         monthView.setAdapter(adapter1);
       /*  dailyAmountView.setAdapter(adapter2);*/
@@ -236,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        //---------------------------------------------------//
 
     }
     //달력에 Clear도장 보여주는 함수

@@ -278,10 +278,6 @@ public class MonthAdapter extends BaseAdapter {
             }catch (ParseException e){
 
             }
-
-
-
-
         }
 
         // 오늘표시
