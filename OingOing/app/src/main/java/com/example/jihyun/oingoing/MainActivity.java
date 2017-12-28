@@ -53,6 +53,7 @@ import static android.R.id.progress;
 //test
 //test1
 //test3
+//test5
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     final static String LOG_TAG = "myLogs";
