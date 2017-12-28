@@ -52,6 +52,7 @@ import io.realm.RealmResults;
 import static android.R.id.progress;
 //test
 //test1
+//test3
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     final static String LOG_TAG = "myLogs";
